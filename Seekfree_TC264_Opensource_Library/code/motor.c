@@ -28,15 +28,15 @@ void initMotors(){
     __initMotor(&motorBottom, 17000, 0, WHEEL_3_PWM_PIN, WHEEL_3_DIR_PIN, MOTOR_H_BRIDGE_NORMAL);
 
     // 初始化PID
-    __initPID(&velPIDl, 60, 3, 0, 0, 200);
+    __initPID(&velPIDl, 60, 3, 2, 0, 200);
     __initPID(&velPIDr, 0, 0, 0, 0, 200);
     __initPID(&velPIDy, 0, 0, 0, 0, 1000);
 
-    __initPID(&angPIDx, 1200, 0, 30, 0, 1000); //纯PD，到这一步也立不起来，因为预期直立角度yaw与实际直立角度有误差，导致轮子越转越快最终倒下
+    __initPID(&angPIDx, 1300, 0, 35, 0, 1000); //纯PD，到这一步也立不起来，因为预期直立角度yaw与实际直立角度有误差，导致轮子越转越快最终倒下
     __initPID(&angPIDy, 0, 0, 0, 0, 1000); // P大时会震荡一次后倒下，P小时会震荡多次后倒下，应该适中
     __initPID(&angPIDz, 0, 0, 0, 0, 1000);
     
-    __initPID(&angVelPIDx, 105, 4, 0, 0, 1000); //纯PI，理论上能在某个位置立住几秒，但是收积分影响，调试时需要按Reset复位积分值
+    __initPID(&angVelPIDx, 195, 4, 0, 0, 1000); //纯PI，理论上能在某个位置立住几秒，但是收积分影响，调试时需要按Reset复位积分值
     __initPID(&angVelPIDy, 0, 0, 0, 0, 1000);
     __initPID(&angVelPIDz, 0, 0, 0, 0, 1000);
 
