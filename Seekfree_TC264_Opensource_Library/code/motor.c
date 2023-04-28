@@ -8,13 +8,12 @@ PIDValue angVelPIDx, angVelPIDy, angVelPIDz;
 /**
  * @brief 仅初始化Motor结构体,不负责初始化引脚与PWM
 */
-void __initMotor(Motor *motor, uint32 freq, int32 pwm,
-        pwm_channel_enum pwmChannel, gpio_pin_enum dirPin,
-        int32_t pCoef, int32_t iCoef, int32_t dCoef, int32_t target, int32_t errorIntMax){
+void __initMotor(Motor *motor, uint32 freq, int32 pwm, pwm_channel_enum pwmChannel, gpio_pin_enum dirPin, MotorType type){
     motor->freq = freq;
     motor->pwm = pwm;
     motor->pwmChannel = pwmChannel;
     motor->dirPin = dirPin;
+    motor->type = type;
 }
 
 void initMotors(){
@@ -24,9 +23,9 @@ void initMotors(){
     */
 
     // 初始化电机的DIR与PWM引脚
-    __initMotor(&motorLeft, 17000, 0, WHEEL_1_PWM_PIN, WHEEL_1_DIR_PIN, 10, 3, 1, 0, 300);
-    __initMotor(&motorRight, 17000, 0, WHEEL_2_PWM_PIN, WHEEL_2_DIR_PIN, 10, 3, 1, 0, 300);
-    __initMotor(&motorBottom, 17000, 0, WHEEL_3_PWM_PIN, WHEEL_3_DIR_PIN, 10, 3, 1, 0, 300);
+    __initMotor(&motorLeft, 17000, 0, WHEEL_1_PWM_PIN, WHEEL_1_DIR_PIN, MOTOR_H_BRIDGE_REVERSE);
+    __initMotor(&motorRight, 17000, 0, WHEEL_2_PWM_PIN, WHEEL_2_DIR_PIN, MOTOR_H_BRIDGE_REVERSE);
+    __initMotor(&motorBottom, 17000, 0, WHEEL_3_PWM_PIN, WHEEL_3_DIR_PIN, MOTOR_H_BRIDGE_NORMAL);
 
     // 初始化PID
     __initPID(&velPIDl, 60, 3, 0, 0, 200);
@@ -72,7 +71,16 @@ void __updateMotor(Motor *motor){
     }
     #endif
     // 无论方向引脚高低电平，实际pwm = 10000 - pwm
-    pwm_set_duty(motor->pwmChannel, PWM_DUTY_MAX - absValue(motor->pwm));
+    uint32 physicalPWM;
+    switch(motor->type){
+        case MOTOR_H_BRIDGE_REVERSE:
+            physicalPWM = PWM_DUTY_MAX - absValue(motor->pwm);
+            break;
+        case MOTOR_H_BRIDGE_NORMAL:
+            physicalPWM = absValue(motor->pwm);
+            break;
+    }
+    pwm_set_duty(motor->pwmChannel, physicalPWM);
     gpio_set_level(motor->dirPin, (uint8)(motor->pwm >= 0));
 }
 
@@ -184,8 +192,8 @@ void updateMotors(
     */
     // setMotor(&motorLeft, ASSIGN, -angVelPIDx.deltaOutput + angVelPIDz.deltaOutput);
     // setMotor(&motorRight, ASSIGN, +angVelPIDx.deltaOutput + angVelPIDz.deltaOutput);
-    setMotor(&motorLeft, ASSIGN, -angVelPIDx.deltaOutput);
-    setMotor(&motorRight, ASSIGN, +angVelPIDx.deltaOutput);
+    // setMotor(&motorLeft, ASSIGN, -angVelPIDx.deltaOutput);
+    // setMotor(&motorRight, ASSIGN, +angVelPIDx.deltaOutput);
     // setMotor(&motorBottom, ASSIGN, angVelPIDy.deltaOutput);
 
 }

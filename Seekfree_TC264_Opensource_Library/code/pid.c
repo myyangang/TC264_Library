@@ -5,7 +5,7 @@ void __initPID(PIDValue *pid,int32_t pCoef, int32_t iCoef, int32_t dCoef, int32_
     pid->error[0] = 0; pid->error[1] = 0; pid->error[2] = 0;
     pid->errorInt = 0;
     pid->errorIntMax = errorIntMax;
-    pid->pCoef = pCoef; pid->iCoef = iCoef; pid->dCoef = dCoef;
+    pid->pCoef = (float)pCoef; pid->iCoef = (float)iCoef; pid->dCoef = (float)dCoef;
     pid->target = target;
     pid->measurement = 0;
     pid->deltaOutput = 0;
