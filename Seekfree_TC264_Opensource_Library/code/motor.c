@@ -29,7 +29,7 @@ void initMotors(){
     __initMotor(&motorBottom, 17000, 0, WHEEL_3_PWM_PIN, WHEEL_3_DIR_PIN, 10, 3, 1, 0, 300);
 
     // 初始化PID
-    __initPID(&velPIDl, 50, 5, 0, 0, 200);
+    __initPID(&velPIDl, 60, 3, 0, 0, 200);
     __initPID(&velPIDr, 0, 0, 0, 0, 200);
     __initPID(&velPIDy, 0, 0, 0, 0, 1000);
 
