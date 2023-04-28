@@ -29,16 +29,17 @@ void initMotors(){
     __initMotor(&motorBottom, 17000, 0, WHEEL_3_PWM_PIN, WHEEL_3_DIR_PIN, 10, 3, 1, 0, 300);
 
     // 初始化PID
-    __initPID(&velPIDl, 0, 0, 0, 0, 1000);
-    __initPID(&velPIDr, 0, 0, 0, 0, 1000);
+    __initPID(&velPIDl, 50, 5, 0, 0, 200);
+    __initPID(&velPIDr, 0, 0, 0, 0, 200);
     __initPID(&velPIDy, 0, 0, 0, 0, 1000);
 
-    __initPID(&angPIDx, 400, 0, 20, 0, 50); //纯PD，到这一步也立不起来，因为预期直立角度yaw与实际直立角度有误差，导致轮子越转越快最终倒下
-    __initPID(&angPIDy, 0, 0, 0, 0, 7000); // P大时会震荡一次后倒下，P小时会震荡多次后倒下，应该适中
-    __initPID(&angPIDz, 0, 0, 0, 0, 7000);
-    __initPID(&angVelPIDx, 185*0.80, 2*0.80, 0, 0, 7000); //纯PI，理论上能在某个位置立住几秒，但是收积分影响，调试时需要按Reset复位积分值
-    __initPID(&angVelPIDy, 0, 0, 0, 0, 7000);
-    __initPID(&angVelPIDz, 0, 0, 0, 0, 7000);
+    __initPID(&angPIDx, 1200, 0, 30, 0, 1000); //纯PD，到这一步也立不起来，因为预期直立角度yaw与实际直立角度有误差，导致轮子越转越快最终倒下
+    __initPID(&angPIDy, 0, 0, 0, 0, 1000); // P大时会震荡一次后倒下，P小时会震荡多次后倒下，应该适中
+    __initPID(&angPIDz, 0, 0, 0, 0, 1000);
+    
+    __initPID(&angVelPIDx, 105, 4, 0, 0, 1000); //纯PI，理论上能在某个位置立住几秒，但是收积分影响，调试时需要按Reset复位积分值
+    __initPID(&angVelPIDy, 0, 0, 0, 0, 1000);
+    __initPID(&angVelPIDz, 0, 0, 0, 0, 1000);
 
 
     // 初始化方向引脚
@@ -100,10 +101,10 @@ void setMotor(Motor *motor, Operation op, int32_t offset){
 }
 
 void updateMotors(
-        int16 motorLeftSpeed, int16 motorRightSpeed, int16 motorBottomSpeed, 
-        int32 cameraSpeedTarget, int32 cameraTurnTarget, 
-        int32 rollX, int32 pitchY, int32 yawZ,
-        int32 angVelX, int32 angVelY, int32 angVelZ){
+        float motorLeftSpeed, float motorRightSpeed, float motorBottomSpeed, 
+        float cameraSpeedTarget, float cameraTurnTarget, 
+        float rollX, float pitchY, float yawZ,
+        float angVelX, float angVelY, float angVelZ){
 
     velPIDl.target = 0; velPIDl.measurement = motorLeftSpeed;   __updatePID(&velPIDl);
     velPIDr.target = 0; velPIDr.measurement = motorRightSpeed;  __updatePID(&velPIDr);
@@ -121,7 +122,7 @@ void updateMotors(
     */
 
     // 在不考虑上一层PID环的情况下,我们期望车身直立平衡,angPIDx与angPIDy的target均为0,angPIDz的target随意.
-    angPIDx.target = 2.2f + (float)(-velPIDl.deltaOutput + velPIDr.deltaOutput) / 100; angPIDx.measurement = rollX; __updatePID(&angPIDx); // 手动修正误差
+    angPIDx.target = 3.3f + (float)(-velPIDl.deltaOutput + velPIDr.deltaOutput) / 100; angPIDx.measurement = rollX; __updatePID(&angPIDx); // 手动修正误差
     angPIDy.target = 0.0f + (float)(-velPIDy.deltaOutput                      ) / 100; angPIDy.measurement = pitchY; __updatePID(&angPIDy);
     angPIDz.target = 0.0f + (float)(+velPIDl.deltaOutput + velPIDr.deltaOutput) / 100; angPIDz.measurement = yawZ; __updatePID(&angPIDz);
     // angPIDx.target = 2.2; angPIDx.measurement = rollX; __updatePID(&angPIDx); // 手动修正误差
