@@ -72,8 +72,7 @@ FusionAhrs ahrs;
 
 // 拨码开关更改模式
 uint8 screenMode = 4;
-uint8 uartSendMode = 4;
-
+uint8 uartSendMode = 255;
 // 姿态解算相关变量
 FusionEuler euler;
 
@@ -302,8 +301,8 @@ int core0_main(void)
     
     pit_ms_init(CCU60_CH1, 10);
     
-    gpio_set_level(WHEEL_3_DIR_PIN, 0);
-    pwm_set_duty(WHEEL_3_PWM_PIN, 5000);
+    // gpio_set_level(WHEEL_3_DIR_PIN, 0);
+    // pwm_set_duty(WHEEL_3_PWM_PIN, 1000);
 
     // 此处编写用户代码 例如外设初始化代码等
     cpu_wait_event_ready();         // 等待所有核心初始化完毕

@@ -30,14 +30,14 @@ void initMotors(){
     // 初始化PID
     __initPID(&velPIDl, 60, 3, 2, 0, 200);
     __initPID(&velPIDr, 0, 0, 0, 0, 200);
-    __initPID(&velPIDy, 0, 0, 0, 0, 1000);
+    __initPID(&velPIDy, 30, 0, 0, 0, 1000);
 
     __initPID(&angPIDx, 1300, 0, 35, 0, 1000); //纯PD，到这一步也立不起来，因为预期直立角度yaw与实际直立角度有误差，导致轮子越转越快最终倒下
-    __initPID(&angPIDy, 0, 0, 0, 0, 1000); // P大时会震荡一次后倒下，P小时会震荡多次后倒下，应该适中
+    __initPID(&angPIDy, 1500, 0, 0, 0, 1000); // P大时会震荡一次后倒下，P小时会震荡多次后倒下，应该适中
     __initPID(&angPIDz, 0, 0, 0, 0, 1000);
     
     __initPID(&angVelPIDx, 195, 4, 0, 0, 1000); //纯PI，理论上能在某个位置立住几秒，但是收积分影响，调试时需要按Reset复位积分值
-    __initPID(&angVelPIDy, 0, 0, 0, 0, 1000);
+    __initPID(&angVelPIDy, 10, 2, 0, 0, 1000);
     __initPID(&angVelPIDz, 0, 0, 0, 0, 1000);
 
 
@@ -49,7 +49,7 @@ void initMotors(){
     // 初始化PWM信号
     pwm_init(WHEEL_1_PWM_PIN, motorRight.freq, PWM_DUTY_MAX);
     pwm_init(WHEEL_2_PWM_PIN, motorLeft.freq, PWM_DUTY_MAX);
-    pwm_init(WHEEL_3_PWM_PIN, motorBottom.freq, PWM_DUTY_MAX);
+    pwm_init(WHEEL_3_PWM_PIN, motorBottom.freq, 0);
 
     // 初始化刹车引脚(低电平有效)
     gpio_init(WHEEL_1_SC_PIN, GPO, GPIO_HIGH, GPO_PUSH_PULL);
@@ -114,6 +114,9 @@ void updateMotors(
         float rollX, float pitchY, float yawZ,
         float angVelX, float angVelY, float angVelZ){
 
+    motorBottomSpeed = minValue(1000, motorBottomSpeed);
+    motorBottomSpeed = maxValue(-1000, motorBottomSpeed);
+
     velPIDl.target = 0; velPIDl.measurement = motorLeftSpeed;   __updatePID(&velPIDl);
     velPIDr.target = 0; velPIDr.measurement = motorRightSpeed;  __updatePID(&velPIDr);
     velPIDy.target = 0; velPIDy.measurement = motorBottomSpeed; __updatePID(&velPIDy);
@@ -131,7 +134,7 @@ void updateMotors(
 
     // 在不考虑上一层PID环的情况下,我们期望车身直立平衡,angPIDx与angPIDy的target均为0,angPIDz的target随意.
     angPIDx.target = 3.3f + (float)(-velPIDl.deltaOutput + velPIDr.deltaOutput) / 100; angPIDx.measurement = rollX; __updatePID(&angPIDx); // 手动修正误差
-    angPIDy.target = 0.0f + (float)(-velPIDy.deltaOutput                      ) / 100; angPIDy.measurement = pitchY; __updatePID(&angPIDy);
+    angPIDy.target = -3.8f + (float)(-velPIDy.deltaOutput                      ) / 100; angPIDy.measurement = pitchY; __updatePID(&angPIDy);
     angPIDz.target = 0.0f + (float)(+velPIDl.deltaOutput + velPIDr.deltaOutput) / 100; angPIDz.measurement = yawZ; __updatePID(&angPIDz);
     // angPIDx.target = 2.2; angPIDx.measurement = rollX; __updatePID(&angPIDx); // 手动修正误差
     // angPIDy.target = 0; angPIDy.measurement = pitchY; __updatePID(&angPIDy);
@@ -153,7 +156,8 @@ void updateMotors(
                 我们期望angVelPIDx.target↓,使得deltaoutput = target - measurement↓,左轮pwm↑,右轮pwm↓
                 ∴angVelPIDx.target -= angPIDx
             Y: 当车身pitch<0时,measurement<0. 车身已有角动量=(0,+,0). 此时target - measurement更可能为正, 即angPIDy输出更可能为正.
-                我们期望角动量(0,+,0)转移到底部轮上,也就是说...
+                我们期望角动量(0,+,0)转移到底部轮上,也就是说底轮(0,+,0)↑
+                ∴angvelPIDy.target += angPIDy
             Z: 当车身yaw<target时,measurement<target. 车身已有角动量=(0,0,-). 此时target - measurement > 0, 即angPIDz输出为正.
                 我们期望角动量(0,0,-)转移到两个动量轮上,也就是说左轮(+,0,+)↓,右轮(-,0,+)↓
                 我们期望accVelPIDz的target↓,使得deltaoutput = target - measurement↓,左轮pwm↓,右轮pwm↓
@@ -162,7 +166,7 @@ void updateMotors(
 
     // 在不考虑上一层PID环的情况下,我们期望车身不动,因此angVelPID的target均为0.
     angVelPIDx.target = -angPIDx.deltaOutput; angVelPIDx.measurement = angVelX; __updatePID(&angVelPIDx);   
-    angVelPIDy.target = 0; angVelPIDy.measurement = angVelY; __updatePID(&angVelPIDy);   
+    angVelPIDy.target = +angPIDy.deltaOutput; angVelPIDy.measurement = angVelY; __updatePID(&angVelPIDy);   
     angVelPIDz.target = -angPIDz.deltaOutput; angVelPIDz.measurement = angVelZ; __updatePID(&angVelPIDz);
 
 
@@ -179,8 +183,8 @@ void updateMotors(
                 我们期望右轮pwm↑,角动量=(-,0,+),反作用角动量=(+,0,-),可以抵消X方向角动量.
                 ∴pwmR += angVelPIDx
             Y: 当pitch↑时,角动量为(0,-,0),gyroZ->angVelY为正. 此时measurement↑,angvelPIDy输出值target-measurement减小
-                ......
-                ......
+                我们期望底轮pwm↓,角动量(0,-,0),反作用角动量(0,+,0),可以抵消Y方向角动量
+                ∴pwmB += angvelPIDy
             Z: 当yaw↑时,角动量为(0,0,+),gyroX->angVelZ为负. 此时measurement↓,angVelPIDz输出值target-measurement增大
                 我们期望左轮pwm↑,角动量=(+,0,+),反作用角动量=(-,0,-),可以抵消Z方向角动量.
                 ∴pwmL += angVelPIDz
@@ -192,8 +196,8 @@ void updateMotors(
     */
     // setMotor(&motorLeft, ASSIGN, -angVelPIDx.deltaOutput + angVelPIDz.deltaOutput);
     // setMotor(&motorRight, ASSIGN, +angVelPIDx.deltaOutput + angVelPIDz.deltaOutput);
-    // setMotor(&motorLeft, ASSIGN, -angVelPIDx.deltaOutput);
-    // setMotor(&motorRight, ASSIGN, +angVelPIDx.deltaOutput);
-    // setMotor(&motorBottom, ASSIGN, angVelPIDy.deltaOutput);
+    setMotor(&motorLeft, ASSIGN, -angVelPIDx.deltaOutput);
+    setMotor(&motorRight, ASSIGN, +angVelPIDx.deltaOutput);
+    // setMotor(&motorBottom, ASSIGN, +angVelPIDy.deltaOutput);
 
 }
