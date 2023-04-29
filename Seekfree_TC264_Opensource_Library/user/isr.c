@@ -41,6 +41,7 @@
 #include "upperComputer.h"
 extern FusionAhrs ahrs;
 extern FusionEuler euler;
+extern uint8 motorMode;
 // **************************** PIT中断函数 ****************************
 IFX_INTERRUPT(cc60_pit_ch0_isr, 0, CCU6_0_CH0_ISR_PRIORITY)
 {
@@ -81,12 +82,21 @@ IFX_INTERRUPT(cc60_pit_ch1_isr, 0, CCU6_0_CH1_ISR_PRIORITY)
     encoder_clear_count(WHEEL_2_ENCODER);
     encoder_clear_count(WHEEL_3_ENCODER);
 
+    if(absValue(euler.angle.roll) >= 15 || motorMode == 0){
+        setMotor(&motorLeft, ASSIGN, 0);
+        setMotor(&motorRight, ASSIGN, 0);
+        setMotor(&motorBottom, ASSIGN, 0);
+        return;
+    }
+
     updateMotors(
             velPIDl.measurement, velPIDr.measurement, velPIDy.measurement,
             0, 0,
             angPIDx.measurement, angPIDy.measurement, angPIDz.measurement,
             imu660ra_gyro_y, imu660ra_gyro_z, imu660ra_gyro_x
     );  
+
+
 
 }
 

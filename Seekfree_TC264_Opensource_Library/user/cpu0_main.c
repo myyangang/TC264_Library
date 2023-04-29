@@ -73,6 +73,9 @@ FusionAhrs ahrs;
 // 拨码开关更改模式
 uint8 screenMode = 4;
 uint8 uartSendMode = 255;
+
+uint8 motorMode = 1;
+
 // 姿态解算相关变量
 FusionEuler euler;
 
@@ -285,6 +288,9 @@ int core0_main(void)
 
     gpio_init(BELL_PIN, GPO, GPIO_LOW, GPO_PUSH_PULL);
 
+    gpio_init(BTN_1_PIN, GPI, GPIO_HIGH, GPI_PULL_UP);
+    gpio_init(BTN_2_PIN, GPI, GPIO_HIGH, GPI_PULL_UP);
+
     wireless_uart_init();
     wireless_uart_send_byte('\r');
     wireless_uart_send_byte('\n');
@@ -381,7 +387,20 @@ int core0_main(void)
                         0,0,0,0
                 );
         }
-        
+
+        if(gpio_get_level(BTN_1_PIN) == 0){
+            system_delay_ms(2);
+            if(gpio_get_level(BTN_1_PIN) == 0){
+                motorMode = 0;
+            }
+        }
+
+        if(gpio_get_level(BTN_2_PIN) == 0){
+            system_delay_ms(2);
+            if(gpio_get_level(BTN_2_PIN) == 0){
+                motorMode = 1;
+            }
+        }
 
         // 此处编写需要循环执行的代码
     }
