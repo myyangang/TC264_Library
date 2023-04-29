@@ -36,7 +36,7 @@ void initMotors(){
     __initPID(&angPIDy, 1500, 0, 0, 0, 1000); // P大时会震荡一次后倒下，P小时会震荡多次后倒下，应该适中
     __initPID(&angPIDz, 0, 0, 0, 0, 1000);
     
-    __initPID(&angVelPIDx, 195, 4, 0, 0, 1000); //纯PI，理论上能在某个位置立住几秒，但是收积分影响，调试时需要按Reset复位积分值
+    __initPID(&angVelPIDx, 105, 4, 0, 0, 1000); //纯PI，理论上能在某个位置立住几秒，但是收积分影响，调试时需要按Reset复位积分值
     __initPID(&angVelPIDy, 10, 2, 0, 0, 1000);
     __initPID(&angVelPIDz, 0, 0, 0, 0, 1000);
 
@@ -133,7 +133,7 @@ void updateMotors(
     */
 
     // 在不考虑上一层PID环的情况下,我们期望车身直立平衡,angPIDx与angPIDy的target均为0,angPIDz的target随意.
-    angPIDx.target = 3.3f + (float)(-velPIDl.deltaOutput + velPIDr.deltaOutput) / 100; angPIDx.measurement = rollX; __updatePID(&angPIDx); // 手动修正误差
+    angPIDx.target = 4.4f + (float)(-velPIDl.deltaOutput + velPIDr.deltaOutput) / 100; angPIDx.measurement = rollX; __updatePID(&angPIDx); // 手动修正误差
     angPIDy.target = -3.8f + (float)(-velPIDy.deltaOutput                      ) / 100; angPIDy.measurement = pitchY; __updatePID(&angPIDy);
     angPIDz.target = 0.0f + (float)(+velPIDl.deltaOutput + velPIDr.deltaOutput) / 100; angPIDz.measurement = yawZ; __updatePID(&angPIDz);
     // angPIDx.target = 2.2; angPIDx.measurement = rollX; __updatePID(&angPIDx); // 手动修正误差
@@ -198,6 +198,6 @@ void updateMotors(
     // setMotor(&motorRight, ASSIGN, +angVelPIDx.deltaOutput + angVelPIDz.deltaOutput);
     setMotor(&motorLeft, ASSIGN, -angVelPIDx.deltaOutput);
     setMotor(&motorRight, ASSIGN, +angVelPIDx.deltaOutput);
-    // setMotor(&motorBottom, ASSIGN, +angVelPIDy.deltaOutput);
+    setMotor(&motorBottom, ASSIGN, +angVelPIDy.deltaOutput);
 
 }
