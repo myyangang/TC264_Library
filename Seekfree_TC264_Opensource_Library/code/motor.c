@@ -28,11 +28,11 @@ void initMotors(){
     __initMotor(&motorBottom, 17000, 0, WHEEL_3_PWM_PIN, WHEEL_3_DIR_PIN, MOTOR_H_BRIDGE_NORMAL);
 
     // 初始化PID
-    __initPID(&velPIDl, 60, 3, 2, 0, 200);
-    __initPID(&velPIDr, 0, 0, 0, 0, 200);
+    __initPID(&velPIDl, 60, 2, 5, 0, 30);
+    __initPID(&velPIDr, 60, 2, 5, 0, 30);
     __initPID(&velPIDy, 30, 0, 8, 0, 1000);
 
-    __initPID(&angPIDx, 1300, 0, 35, 0, 1000); //纯PD，到这一步也立不起来，因为预期直立角度yaw与实际直立角度有误差，导致轮子越转越快最终倒下
+    __initPID(&angPIDx, 2000, 0, 35, 0, 1000); //纯PD，到这一步也立不起来，因为预期直立角度yaw与实际直立角度有误差，导致轮子越转越快最终倒下
     __initPID(&angPIDy, 1500, 0, 0, 0, 1000); // P大时会震荡一次后倒下，P小时会震荡多次后倒下，应该适中
     __initPID(&angPIDz, 0, 0, 0, 0, 1000);
     
@@ -133,7 +133,7 @@ void updateMotors(
     */
 
     // 在不考虑上一层PID环的情况下,我们期望车身直立平衡,angPIDx与angPIDy的target均为0,angPIDz的target随意.
-    angPIDx.target = 4.3f + (float)(-velPIDl.deltaOutput + velPIDr.deltaOutput) / 100; angPIDx.measurement = rollX; __updatePID(&angPIDx); // 手动修正误差
+    angPIDx.target = 3.4f + (float)(-velPIDl.deltaOutput + velPIDr.deltaOutput) / 100; angPIDx.measurement = rollX; __updatePID(&angPIDx); // 手动修正误差
     angPIDy.target = -3.8f + (float)(-velPIDy.deltaOutput                      ) / 100; angPIDy.measurement = pitchY; __updatePID(&angPIDy);
     angPIDz.target = 0.0f + (float)(+velPIDl.deltaOutput + velPIDr.deltaOutput) / 100; angPIDz.measurement = yawZ; __updatePID(&angPIDz);
     // angPIDx.target = 2.2; angPIDx.measurement = rollX; __updatePID(&angPIDx); // 手动修正误差
