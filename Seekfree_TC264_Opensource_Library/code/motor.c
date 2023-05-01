@@ -196,8 +196,8 @@ void updateMotors(
     */
     // setMotor(&motorLeft, ASSIGN, -angVelPIDx.deltaOutput + angVelPIDz.deltaOutput);
     // setMotor(&motorRight, ASSIGN, +angVelPIDx.deltaOutput + angVelPIDz.deltaOutput);
-    setMotor(&motorLeft, ASSIGN, -angVelPIDx.deltaOutput);
-    setMotor(&motorRight, ASSIGN, +angVelPIDx.deltaOutput);
-    setMotor(&motorBottom, ASSIGN, +angVelPIDy.deltaOutput);
+    // setMotor(&motorLeft, ASSIGN, -angVelPIDx.deltaOutput);
+    // setMotor(&motorRight, ASSIGN, +angVelPIDx.deltaOutput);
+    // setMotor(&motorBottom, ASSIGN, +angVelPIDy.deltaOutput);
 
 }

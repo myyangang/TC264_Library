@@ -31,14 +31,14 @@ void printGyro(){
     tft180_show_float(78, 80, imu660ra_gyro_transition(imu660ra_gyro_z), 2, 2);
 }
 
-void printEularAngle(const FusionEuler *euler){
+void printEularAngle(float yaw, float pitch, float roll){
     tft180_show_string(0, 96, "yaw");
     tft180_show_string(0, 112, "rol");
     tft180_show_string(0, 128, "pitch");
 
-    tft180_show_float(43, 96, euler->angle.yaw, 3, 1);
-    tft180_show_float(43, 112, euler->angle.roll, 3, 1);
-    tft180_show_float(43, 128, euler->angle.pitch, 3, 1);
+    tft180_show_float(43, 96, yaw, 3, 2);
+    tft180_show_float(43, 112, roll, 3, 2);
+    tft180_show_float(43, 128, pitch, 3, 2);
 
     // tft180_show_int(42, 96, euler->angle.yaw, 3);
     // tft180_show_int(42, 112, euler->angle.roll, 3);
@@ -48,10 +48,10 @@ void printEularAngle(const FusionEuler *euler){
 /**
  * @bug 禁用,与无线串口冲突
 */
-void printAllAttitudeSolution(const FusionEuler *euler){
+void printAllAttitudeSolution(float yaw, float pitch, float roll){
     printAcc();
     printGyro();
-    printEularAngle(euler);
+    printEularAngle(yaw, pitch, roll);
 }
 
 void printAngVelPID(PIDValue *angVelPIDx, PIDValue *angVelPIDy, PIDValue *angVelPIDz){

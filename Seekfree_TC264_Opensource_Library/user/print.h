@@ -8,8 +8,8 @@
 
 void printAcc();
 void printGyro();
-void printEularAngle(const FusionEuler *euler);
-void printAllAttitudeSolution(const FusionEuler *euler);
+void printEularAngle(float yaw, float pitch, float roll);
+void printAllAttitudeSolution(float yaw, float pitch, float roll);
 void printAngVelPID(PIDValue *angVelPIDx, PIDValue *angVelPIDy, PIDValue *angVelPIDz);
 void printMotorSpeed(int16 motorLeftSpeed, int16 motorRightSpeed, int16 motorBottomSpeed);
 void printAllPIDCoef();

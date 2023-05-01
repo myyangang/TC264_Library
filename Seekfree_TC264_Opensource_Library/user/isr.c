@@ -41,7 +41,8 @@
 #include "upperComputer.h"
 extern FusionAhrs ahrs;
 extern FusionEuler euler;
-
+extern int32 yawCount;
+extern float yawPrevious;
 // **************************** PIT中断函数 ****************************
 IFX_INTERRUPT(cc60_pit_ch0_isr, 0, CCU6_0_CH0_ISR_PRIORITY)
 {
@@ -71,9 +72,23 @@ IFX_INTERRUPT(cc60_pit_ch1_isr, 0, CCU6_0_CH1_ISR_PRIORITY)
     }}; // replace this with actual accelerometer data in g
     FusionAhrsUpdateNoMagnetometer(&ahrs, gyroscope, accelerometer, 0.01);
     euler = FusionQuaternionToEuler(FusionAhrsGetQuaternion(&ahrs));
+    
     angPIDx.measurement = euler.angle.roll;
     angPIDy.measurement = euler.angle.pitch;
-    angPIDz.measurement = euler.angle.yaw;
+    float yawBias = euler.angle.yaw - yawPrevious;
+    if(yawBias > 180){ // 如果yaw从-179突变为+179, 说明yaw减小
+        #ifdef _DEBUG_BELL_
+        gpio_set_level(BELL_PIN, 1); system_delay_us(500); gpio_set_level(BELL_PIN, 0);
+        #endif
+        yawCount--;
+    }else if(yawBias < -180){ // 如果yaw从+179突变为-179,说明yaw增加
+        #ifdef _DEBUG_BELL_
+        gpio_set_level(BELL_PIN, 1); system_delay_us(500); gpio_set_level(BELL_PIN, 0);
+        #endif
+        yawCount++;
+    }
+    angPIDz.measurement = euler.angle.yaw + 360 * yawCount;
+    yawPrevious         = euler.angle.yaw;
 
     velPIDl.measurement = -encoder_get_count(WHEEL_1_ENCODER);
     velPIDr.measurement = -encoder_get_count(WHEEL_2_ENCODER);
