@@ -40,3 +40,201 @@ void wireless_uart_LingLi_send(
     wireless_uart_send_byte((unsigned char)(checksum & 0x00ff));
     wireless_uart_send_byte(xorsum);
 }
+
+void variableOperate(uint8 variable, uint8 operation){
+    switch (variable){
+        // angVelPIDx
+        case 'a':
+            if(operation=='+'){angVelPIDx.pCoef += 10;}
+            if(operation=='-'){angVelPIDx.pCoef -= 10;}
+            if(operation=='0'){angVelPIDx.pCoef = 0;}
+            break;
+        case 'b':
+            if(operation=='+'){angVelPIDx.iCoef += 1;}
+            if(operation=='-'){angVelPIDx.iCoef -= 1;}
+            if(operation=='0'){angVelPIDx.iCoef = 0;}
+            break;
+        case 'c':
+            if(operation=='+'){angVelPIDx.dCoef += 1;}
+            if(operation=='-'){angVelPIDx.dCoef -= 1;}
+            if(operation=='0'){angVelPIDx.dCoef = 0;}
+            break;
+        // angVelPIDy
+        case 'd':
+            if(operation=='+'){angVelPIDy.pCoef += 10;}
+            if(operation=='-'){angVelPIDy.pCoef -= 10;}
+            if(operation=='0'){angVelPIDy.pCoef = 0;}
+            break;
+        case 'e':
+            if(operation=='+'){angVelPIDy.iCoef += 1;}
+            if(operation=='-'){angVelPIDy.iCoef -= 1;}
+            if(operation=='0'){angVelPIDy.iCoef = 0;}
+            break;
+        case 'f':
+            if(operation=='+'){angVelPIDy.dCoef += 1;}
+            if(operation=='-'){angVelPIDy.dCoef -= 1;}
+            if(operation=='0'){angVelPIDy.dCoef = 0;}
+            break;
+        // angVelPIDz
+        case 'g':
+            if(operation=='+'){angVelPIDz.pCoef += 10;}
+            if(operation=='-'){angVelPIDz.pCoef -= 10;}
+            if(operation=='0'){angVelPIDz.pCoef = 0;}
+            break;
+        case 'h':
+            if(operation=='+'){angVelPIDz.iCoef += 1;}
+            if(operation=='-'){angVelPIDz.iCoef -= 1;}
+            if(operation=='0'){angVelPIDz.iCoef = 0;}
+            break;
+        case 'i':
+            if(operation=='+'){angVelPIDz.dCoef += 1;}
+            if(operation=='-'){angVelPIDz.dCoef -= 1;}
+            if(operation=='0'){angVelPIDz.dCoef = 0;}
+            break;
+        // angPIDx
+        case 'j':
+            if(operation=='+'){angPIDx.pCoef += 10;}
+            if(operation=='-'){angPIDx.pCoef -= 10;}
+            if(operation=='0'){angPIDx.pCoef = 0;}
+            break;
+        case 'k':
+            if(operation=='+'){angPIDx.iCoef += 1;}
+            if(operation=='-'){angPIDx.iCoef -= 1;}
+            if(operation=='0'){angPIDx.iCoef = 0;}
+            break;
+        case 'l':
+            if(operation=='+'){angPIDx.dCoef += 1;}
+            if(operation=='-'){angPIDx.dCoef -= 1;}
+            if(operation=='0'){angPIDx.dCoef = 0;}
+            break;
+        // angPIDy
+        case 'm':
+            if(operation=='+'){angPIDy.pCoef += 10;}
+            if(operation=='-'){angPIDy.pCoef -= 10;}
+            if(operation=='0'){angPIDy.pCoef = 0;}
+            break;
+        case 'n':
+            if(operation=='+'){angPIDy.iCoef += 1;}
+            if(operation=='-'){angPIDy.iCoef -= 1;}
+            if(operation=='0'){angPIDy.iCoef = 0;}
+            break;
+        case 'o':
+            if(operation=='+'){angPIDy.dCoef += 1;}
+            if(operation=='-'){angPIDy.dCoef -= 1;}
+            if(operation=='0'){angPIDy.dCoef = 0;}
+            break;
+        // angPIDz
+        case 'p':
+            if(operation=='+'){angPIDz.pCoef += 10;}
+            if(operation=='-'){angPIDz.pCoef -= 10;}
+            if(operation=='0'){angPIDz.pCoef = 0;}
+            break;
+        case 'q':
+            if(operation=='+'){angPIDz.iCoef += 1;}
+            if(operation=='-'){angPIDz.iCoef -= 1;}
+            if(operation=='0'){angPIDz.iCoef = 0;}
+            break;
+        case 'r':
+            if(operation=='+'){angPIDz.dCoef += 1;}
+            if(operation=='-'){angPIDz.dCoef -= 1;}
+            if(operation=='0'){angPIDz.dCoef = 0;}
+            break;
+        // velPIDl
+        case 's':
+            if(operation=='+'){velPIDl.pCoef += 10;}
+            if(operation=='-'){velPIDl.pCoef -= 10;}
+            if(operation=='0'){velPIDl.pCoef = 0;}
+            break;
+        case 't':
+            if(operation=='+'){velPIDl.iCoef += 1;}
+            if(operation=='-'){velPIDl.iCoef -= 1;}
+            if(operation=='0'){velPIDl.iCoef = 0;}
+            break;
+        case 'u':
+            if(operation=='+'){velPIDl.dCoef += 1;}
+            if(operation=='-'){velPIDl.dCoef -= 1;}
+            if(operation=='0'){velPIDl.dCoef = 0;}
+            break;
+        // velPIDr
+        case 'v':
+            if(operation=='+'){velPIDr.pCoef += 10;}
+            if(operation=='-'){velPIDr.pCoef -= 10;}
+            if(operation=='0'){velPIDr.pCoef = 0;}
+            break;
+        case 'w':
+            if(operation=='+'){velPIDr.iCoef += 1;}
+            if(operation=='-'){velPIDr.iCoef -= 1;}
+            if(operation=='0'){velPIDr.iCoef = 0;}
+            break;
+        case 'x':
+            if(operation=='+'){velPIDr.dCoef += 1;}
+            if(operation=='-'){velPIDr.dCoef -= 1;}
+            if(operation=='0'){velPIDr.dCoef = 0;}
+            break;
+        // velPIDy
+        case 'y':
+            if(operation=='+'){velPIDy.pCoef += 10;}
+            if(operation=='-'){velPIDy.pCoef -= 10;}
+            if(operation=='0'){velPIDy.pCoef = 0;}
+            break;
+        case 'z':
+            if(operation=='+'){velPIDy.iCoef += 1;}
+            if(operation=='-'){velPIDy.iCoef -= 1;}
+            if(operation=='0'){velPIDy.iCoef = 0;}
+            break;
+        case 'A':
+            if(operation=='+'){velPIDy.dCoef += 1;}
+            if(operation=='-'){velPIDy.dCoef -= 1;}
+            if(operation=='0'){velPIDy.dCoef = 0;}
+            break;
+
+        // motorLeft PWM
+        case 'B':
+            if(operation=='+'){setMotor(&motorLeft, PLUS, 1000);}
+            if(operation=='-'){setMotor(&motorLeft, MINUS, 1000);}
+            if(operation=='0'){setMotor(&motorLeft, ASSIGN, 0);}
+            if(operation=='a'){setMotor(&motorLeft, OPPOSE, 0);}
+            break;
+
+        // motorRight PWM
+        case 'C':
+            if(operation=='+'){setMotor(&motorRight, PLUS, 1000);}
+            if(operation=='-'){setMotor(&motorRight, MINUS, 1000);}
+            if(operation=='0'){setMotor(&motorRight, ASSIGN, 0);}
+            if(operation=='a'){setMotor(&motorRight, OPPOSE, 0);}
+            break;
+        
+        case 'D':
+            if(operation=='+'){setMotor(&motorBottom, PLUS, 1000);}
+            if(operation=='-'){setMotor(&motorBottom, MINUS, 1000);}
+            if(operation=='0'){setMotor(&motorBottom, ASSIGN, 0);}
+            if(operation=='a'){setMotor(&motorBottom, OPPOSE, 0);}
+            break;
+
+        default:
+            break;
+    }
+}
+
+void modeFlagOperate(uint8 modeFlag, uint8 value){
+    switch (modeFlag){
+        case 'a': // 改变串口发送内容模式
+            uartSendMode = value - '0';
+            break;
+        case 'b': // 改变显示屏显示内容模式
+            tft180_clear();
+            screenMode = value - '0';
+            break;
+    }
+}
+
+void uartCommandHandler(uint8 data_buffer[32]){
+    switch (data_buffer[0]){
+        case '0': // 改变变量值
+            variableOperate(data_buffer[1], data_buffer[2]);
+            break;
+        case '1': // 改变单标志位内容
+            modeFlagOperate(data_buffer[1], data_buffer[2]);
+            break;
+    }
+}
