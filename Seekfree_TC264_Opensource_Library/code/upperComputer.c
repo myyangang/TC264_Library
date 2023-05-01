@@ -211,6 +211,13 @@ void variableOperate(uint8 variable, uint8 operation){
             if(operation=='a'){setMotor(&motorBottom, OPPOSE, 0);}
             break;
 
+        case 'E':
+            if(operation=='+'){angPIDz.target += 5;}
+            if(operation=='-'){angPIDz.target -= 5;}
+            if(operation=='0'){angPIDz.target =  0;}
+            if(operation=='a'){angPIDz.target = -angPIDz.target;}
+            break;
+
         default:
             break;
     }
