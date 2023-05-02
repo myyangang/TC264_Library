@@ -71,14 +71,14 @@ uint8 count = 0;
 FusionAhrs ahrs;
 
 // 拨码开关更改模式
-uint8 screenMode = 5;
+uint8 screenMode = 4;
 uint8 uartSendMode = 255;
 
 // 姿态解算相关变量
 FusionEuler euler;
 int32 yawCount = 0;
 float yawPrevious = 0;
-
+float yawTargetOffset = 0;
 
 int core0_main(void)
 {

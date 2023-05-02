@@ -5,6 +5,7 @@
 #include "motor.h"
 extern uint8 uartSendMode;
 extern uint8 screenMode;
+extern float yawTargetOffset;
 void wireless_uart_LingLi_send(
         uint16 a1, uint16 a2, uint16 a3, uint16 a4,
         uint16 b1, uint16 b2, uint16 b3, uint16 b4,

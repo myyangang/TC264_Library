@@ -212,10 +212,9 @@ void variableOperate(uint8 variable, uint8 operation){
             break;
 
         case 'E':
-            if(operation=='+'){angPIDz.target += 5;}
-            if(operation=='-'){angPIDz.target -= 5;}
-            if(operation=='0'){angPIDz.target =  0;}
-            if(operation=='a'){angPIDz.target = -angPIDz.target;}
+            if(operation=='+'){yawTargetOffset += 5;}
+            if(operation=='-'){yawTargetOffset -= 5;}
+            if(operation=='0'){yawTargetOffset =  0;}
             #ifdef _DEBUG_BELL_
                 gpio_set_level(BELL_PIN, 1); system_delay_us(500); gpio_set_level(BELL_PIN, 0);
             #endif
