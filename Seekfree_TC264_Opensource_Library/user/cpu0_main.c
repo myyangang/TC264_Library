@@ -71,7 +71,7 @@ uint8 count = 0;
 FusionAhrs ahrs;
 
 // 拨码开关更改模式
-uint8 screenMode = 0;
+uint8 screenMode = 5;
 uint8 uartSendMode = 255;
 
 // 姿态解算相关变量
@@ -100,6 +100,11 @@ int core0_main(void)
     wireless_uart_send_byte('\n');
     wireless_uart_send_string("Wireless uart init successful.\r\n");
 
+
+    // 摄像头初始化
+    if(mt9v03x_init() == 1){
+        gpio_set_level(BELL_PIN, 1);
+    }
 
     tft180_init();
 
@@ -151,6 +156,8 @@ int core0_main(void)
             case 4:
                 printAllPIDOutput();
                 break;
+            case 5:
+                printCamera();
             default:
                 system_delay_ms(5); // 千万别删!无线串口read_buffer()相邻两次调用需要一定的延时,否则会收发失去同步/藏包.
         }

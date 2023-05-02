@@ -130,3 +130,7 @@ void printAllPIDOutput(){
     tft180_show_string(0, 128, "vR"); tft180_show_int(20, 128, velPIDr.target, 4); tft180_show_int(54, 128, velPIDr.measurement, 4); tft180_show_int(88, 128, velPIDr.deltaOutput, 4);
     tft180_show_string(0, 144, "vY"); tft180_show_int(20, 144, velPIDy.target, 4); tft180_show_int(54, 144, velPIDy.measurement, 4); tft180_show_int(88, 144, velPIDy.deltaOutput, 4);
 }
+
+void printCamera(){
+    tft180_show_gray_image(0, 0, mt9v03x_image, MT9V03X_W, MT9V03X_H, 160/5, 128/5, 0);
+}

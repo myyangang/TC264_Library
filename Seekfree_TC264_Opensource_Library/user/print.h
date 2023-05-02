@@ -14,4 +14,5 @@ void printAngVelPID(PIDValue *angVelPIDx, PIDValue *angVelPIDy, PIDValue *angVel
 void printMotorSpeed(int16 motorLeftSpeed, int16 motorRightSpeed, int16 motorBottomSpeed);
 void printAllPIDCoef();
 void printAllPIDOutput();
+void printCamera();
 #endif
