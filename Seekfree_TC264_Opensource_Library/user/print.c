@@ -132,5 +132,5 @@ void printAllPIDOutput(){
 }
 
 void printCamera(){
-    tft180_show_gray_image(0, 0, mt9v03x_image, MT9V03X_W, MT9V03X_H, 160/5, 128/5, 0);
+    tft180_show_gray_image(0, 0, mt9v03x_image[0], MT9V03X_W, MT9V03X_H, 160/10, 128/10, 0);
 }

@@ -102,9 +102,7 @@ int core0_main(void)
 
 
     // 摄像头初始化
-    if(mt9v03x_init() == 1){
-        gpio_set_level(BELL_PIN, 1);
-    }
+    mt9v03x_init();
 
     tft180_init();
 
@@ -158,6 +156,7 @@ int core0_main(void)
                 break;
             case 5:
                 printCamera();
+                break;
             default:
                 system_delay_ms(5); // 千万别删!无线串口read_buffer()相邻两次调用需要一定的延时,否则会收发失去同步/藏包.
         }
