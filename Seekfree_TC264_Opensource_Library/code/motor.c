@@ -33,7 +33,7 @@ void initMotors(){
     __initPID(&velPIDy, 30, 0, 8, 0, 1000);
 
     __initPID(&angPIDx, 2000, 0, 35, 0, 1000); //纯PD，到这一步也立不起来，因为预期直立角度yaw与实际直立角度有误差，导致轮子越转越快最终倒下
-    __initPID(&angPIDy, 1500, 0, 0, 0, 1000); // P大时会震荡一次后倒下，P小时会震荡多次后倒下，应该适中
+    __initPID(&angPIDy, 1500, 0, 20, 0, 1000); // P大时会震荡一次后倒下，P小时会震荡多次后倒下，应该适中
     __initPID(&angPIDz, 1800, 0, 35, 0, 1000);
     
     __initPID(&angVelPIDx, 105, 4, 0, 0, 1000); //纯PI，理论上能在某个位置立住几秒，但是收积分影响，调试时需要按Reset复位积分值
@@ -119,7 +119,7 @@ void updateMotors(
 
     velPIDl.target = 0; velPIDl.measurement = motorLeftSpeed;   __updatePID(&velPIDl);
     velPIDr.target = 0; velPIDr.measurement = motorRightSpeed;  __updatePID(&velPIDr);
-    velPIDy.target = 0; velPIDy.measurement = motorBottomSpeed; __updatePID(&velPIDy);
+                      ; velPIDy.measurement = motorBottomSpeed; __updatePID(&velPIDy);
 
     /* 通过三轮测速值,决定角度环target
         分析: 假设现在车身直立.

@@ -220,6 +220,15 @@ void variableOperate(uint8 variable, uint8 operation){
             #endif
             break;
 
+        case 'F':
+            if(operation=='+'){velPIDy.target += 20;}
+            if(operation=='-'){velPIDy.target -= 20;}
+            if(operation=='0'){velPIDy.target =  0;}
+            #ifdef _DEBUG_BELL_
+                gpio_set_level(BELL_PIN, 1); system_delay_us(500); gpio_set_level(BELL_PIN, 0);
+            #endif
+            break;
+
         default:
             break;
     }
