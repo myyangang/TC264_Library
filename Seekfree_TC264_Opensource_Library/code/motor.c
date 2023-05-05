@@ -28,16 +28,16 @@ void initMotors(){
     __initMotor(&motorBottom, 17000, 0, WHEEL_3_PWM_PIN, WHEEL_3_DIR_PIN, MOTOR_H_BRIDGE_NORMAL);
 
     // 初始化PID
-    __initPID(&velPIDl, 60, 2, 5, 0, 30);
-    __initPID(&velPIDr, 60, 2, 5, 0, 30);
-    __initPID(&velPIDy, 30, 0, 8, 0, 1000);
+    __initPID(&velPIDl, 60, 0, 5, 0, 1000);
+    __initPID(&velPIDr, 60, 0, 5, 0, 1000);
+    __initPID(&velPIDy, 30, 0, 35, 0, 1000);
 
-    __initPID(&angPIDx, 2000, 0, 35, 0, 1000); //纯PD，到这一步也立不起来，因为预期直立角度yaw与实际直立角度有误差，导致轮子越转越快最终倒下
-    __initPID(&angPIDy, 1200, 0, 20, 0, 1000); // P大时会震荡一次后倒下，P小时会震荡多次后倒下，应该适中
+    __initPID(&angPIDx, 1800, 0, 35, 0, 1000); //纯PD，到这一步也立不起来，因为预期直立角度yaw与实际直立角度有误差，导致轮子越转越快最终倒下
+    __initPID(&angPIDy, 1200, 0, 25, 0, 1000); // P大时会震荡一次后倒下，P小时会震荡多次后倒下，应该适中
     __initPID(&angPIDz, 1800, 0, 35, 0, 1000);
     
     __initPID(&angVelPIDx, 105, 4, 0, 0, 1000); //纯PI，理论上能在某个位置立住几秒，但是收积分影响，调试时需要按Reset复位积分值
-    __initPID(&angVelPIDy, 10, 2, 0, 0, 1000);
+    __initPID(&angVelPIDy, 10, 4, 0, 0, 1000);
     __initPID(&angVelPIDz, 25, 0, 0, 0, 1000);
 
 
@@ -119,7 +119,7 @@ void updateMotors(
 
     velPIDl.target = 0; velPIDl.measurement = motorLeftSpeed;   __updatePID(&velPIDl);
     velPIDr.target = 0; velPIDr.measurement = motorRightSpeed;  __updatePID(&velPIDr);
-                      ; velPIDy.measurement = motorBottomSpeed; __updatePID(&velPIDy);
+    ; velPIDy.measurement = motorBottomSpeed; __updatePID(&velPIDy);
 
     /* 通过三轮测速值,决定角度环target
         分析: 假设现在车身直立.
@@ -136,7 +136,7 @@ void updateMotors(
     angPIDx.target = +3.8f + (float)(-velPIDl.deltaOutput + velPIDr.deltaOutput) / 100; angPIDx.measurement = rollX; __updatePID(&angPIDx); // 手动修正误差
     angPIDy.target = -2.7f + (float)(-velPIDy.deltaOutput                      ) / 100; angPIDy.measurement = pitchY; __updatePID(&angPIDy);
     angPIDz.target = yawTargetOffset + (float)(velPIDl.deltaOutput + velPIDr.deltaOutput) / 70;  angPIDz.measurement = yawZ;
-    if(absValue(angPIDz.target - angPIDz.measurement) > 0.5){
+    if(absValue(angPIDz.target - angPIDz.measurement) > 4){
         __updatePID(&angPIDz);
     }else{
         angPIDz.deltaOutput = 0;
@@ -173,7 +173,11 @@ void updateMotors(
     angVelPIDx.target = -angPIDx.deltaOutput; angVelPIDx.measurement = angVelX; __updatePID(&angVelPIDx);   
     angVelPIDy.target = +angPIDy.deltaOutput; angVelPIDy.measurement = angVelY; __updatePID(&angVelPIDy);   
     angVelPIDz.target = -angPIDz.deltaOutput; angVelPIDz.measurement = angVelZ; __updatePID(&angVelPIDz);
-
+    if(absValue(angPIDz.target - angPIDz.measurement) > 4){
+        __updatePID(&angPIDz);
+    }else{
+        angVelPIDz.deltaOutput = 0;
+    }
 
     /* 通过角速度环输出,决定PWM
         已知:
