@@ -135,12 +135,8 @@ void updateMotors(
     // 在不考虑上一层PID环的情况下,我们期望车身直立平衡,angPIDx与angPIDy的target均为0,angPIDz的target随意.
     angPIDx.target = +3.8f + (float)(-velPIDl.deltaOutput + velPIDr.deltaOutput) / 100; angPIDx.measurement = rollX; __updatePID(&angPIDx); // 手动修正误差
     angPIDy.target = -2.7f + (float)(-velPIDy.deltaOutput                      ) / 100; angPIDy.measurement = pitchY; __updatePID(&angPIDy);
-    angPIDz.target = yawTargetOffset + (float)(velPIDl.deltaOutput + velPIDr.deltaOutput) / 70;  angPIDz.measurement = yawZ;
-    if(absValue(angPIDz.target - angPIDz.measurement) > 4){
-        __updatePID(&angPIDz);
-    }else{
-        angPIDz.deltaOutput = 0;
-    }
+    // angPIDz.target = yawTargetOffset + (float)(velPIDl.deltaOutput + velPIDr.deltaOutput) / 70;  angPIDz.measurement = yawZ;
+
     // angPIDx.target = 2.2; angPIDx.measurement = rollX; __updatePID(&angPIDx); // 手动修正误差
     // angPIDy.target = 0; angPIDy.measurement = pitchY; __updatePID(&angPIDy);
     // angPIDz.target = (int)(0);    angPIDz.measurement = yawZ; __updatePID(&angPIDz);
@@ -172,7 +168,8 @@ void updateMotors(
     // 在不考虑上一层PID环的情况下,我们期望车身不动,因此angVelPID的target均为0.
     angVelPIDx.target = -angPIDx.deltaOutput; angVelPIDx.measurement = angVelX; __updatePID(&angVelPIDx);   
     angVelPIDy.target = +angPIDy.deltaOutput; angVelPIDy.measurement = angVelY; __updatePID(&angVelPIDy);   
-    angVelPIDz.target = -angPIDz.deltaOutput; angVelPIDz.measurement = angVelZ; __updatePID(&angVelPIDz);
+    // angVelPIDz.target = -angPIDz.deltaOutput; angVelPIDz.measurement = angVelZ; __updatePID(&angVelPIDz);
+    angVelPIDz.target = 0; angVelPIDz.measurement = angVelZ; __updatePID(&angVelPIDz);
     if(absValue(angPIDz.target - angPIDz.measurement) > 4){
         __updatePID(&angPIDz);
     }else{
@@ -203,10 +200,10 @@ void updateMotors(
         实践测试:
             当车身角动量为(+,0,0)时,右轮角动量=(+,0,-),反作用角动量为(-,0,+),阻止了X方向的角动量变化.
     */
-    setMotor(&motorLeft, ASSIGN, -angVelPIDx.deltaOutput);
-    setMotor(&motorRight, ASSIGN, +angVelPIDx.deltaOutput);
-    // setMotor(&motorLeft, ASSIGN, -angVelPIDx.deltaOutput + angVelPIDz.deltaOutput);
-    // setMotor(&motorRight, ASSIGN, +angVelPIDx.deltaOutput + angVelPIDz.deltaOutput);
+    // setMotor(&motorLeft, ASSIGN, -angVelPIDx.deltaOutput);
+    // setMotor(&motorRight, ASSIGN, +angVelPIDx.deltaOutput);
+    setMotor(&motorLeft, ASSIGN, -angVelPIDx.deltaOutput + angVelPIDz.deltaOutput);
+    setMotor(&motorRight, ASSIGN, +angVelPIDx.deltaOutput + angVelPIDz.deltaOutput);
     // setMotor(&motorLeft, ASSIGN, -angVelPIDx.deltaOutput);
     // setMotor(&motorRight, ASSIGN, +angVelPIDx.deltaOutput);
     setMotor(&motorBottom, ASSIGN, +angVelPIDy.deltaOutput);

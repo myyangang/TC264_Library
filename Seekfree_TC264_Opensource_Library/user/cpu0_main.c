@@ -72,7 +72,7 @@ FusionAhrs ahrs;
 
 // 拨码开关更改模式
 uint8 screenMode = 4;
-uint8 uartSendMode = 255;
+uint8 uartSendMode = 6;
 
 // 姿态解算相关变量
 FusionEuler euler;
@@ -204,6 +204,12 @@ int core0_main(void)
                         velPIDl.measurement, velPIDr.measurement, 0, 0
                 );
                 break;
+            case 6:
+                wireless_uart_LingLi_send(
+                        angPIDz.pCorr, angPIDz.iCorr, angPIDz.dCorr, angPIDz.deltaOutput,
+                        motorLeft.pwm, motorRight.pwm, 0, 0,
+                        angPIDz.target, angPIDz.measurement, angPIDz.deltaOutput, 0
+                );
         }
 
         // if(gpio_get_level(BTN_1_PIN) == 0){
