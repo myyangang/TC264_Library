@@ -70,7 +70,7 @@ uint8 count = 0;
 // 欧拉角相关变量
 FusionAhrs ahrs;
 
-// 拨码开关更改模式
+uint8 switchMode = 255;
 uint8 screenMode = 4;
 uint8 uartSendMode = 255;
 
@@ -85,10 +85,11 @@ int core0_main(void)
     clock_init();                   // 获取时钟频率<务必保留>
     debug_init();                   // 初始化默认调试串口
     // 此处编写用户代码 例如外设初始化代码等
-    // gpio_init(SW_1_PIN, GPI, GPIO_LOW, GPI_PULL_UP);
-    // gpio_init(SW_2_PIN, GPI, GPIO_LOW, GPI_PULL_UP);
-    // gpio_init(SW_3_PIN, GPI, GPIO_LOW, GPI_PULL_UP);
-    // gpio_init(SW_4_PIN, GPI, GPIO_LOW, GPI_PULL_UP);
+
+    gpio_init(SW_1_PIN, GPI, GPIO_LOW, GPI_PULL_UP);
+    gpio_init(SW_2_PIN, GPI, GPIO_LOW, GPI_PULL_UP);
+    gpio_init(SW_3_PIN, GPI, GPIO_LOW, GPI_PULL_UP);
+    gpio_init(SW_4_PIN, GPI, GPIO_LOW, GPI_PULL_UP);
 
     gpio_init(BELL_PIN, GPO, GPIO_LOW, GPO_PUSH_PULL);
 
@@ -123,10 +124,15 @@ int core0_main(void)
     {
         // 此处编写需要循环执行的代码
 
-        // mode = gpio_get_level(SW_1_PIN); mode <<= 1;
-        // mode = gpio_get_level(SW_2_PIN); mode <<= 1;
-        // mode = gpio_get_level(SW_3_PIN); mode <<= 1;
-        // mode = gpio_get_level(SW_4_PIN); 
+        switchMode = 0;
+        switchMode |= gpio_get_level(SW_1_PIN) << 1;
+        switchMode |= gpio_get_level(SW_2_PIN) << 2;
+        switchMode |= gpio_get_level(SW_3_PIN) << 3;
+        switchMode |= gpio_get_level(SW_4_PIN) << 4;
+        
+        if(!(switchMode & 1)){ screenMode = 255; }
+        if(!(switchMode & 2)){ uartSendMode = 255; }
+
 
         data_len = (uint8)wireless_uart_read_buff(data_buffer, 185);             // 查看是否有消息 默认缓冲区是 WIRELESS_UART_BUFFER_SIZE 总共 64 字节
         if(data_len > 0){
