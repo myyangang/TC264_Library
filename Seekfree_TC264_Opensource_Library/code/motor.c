@@ -169,12 +169,7 @@ void updateMotors(
     angVelPIDx.target = -angPIDx.deltaOutput; angVelPIDx.measurement = angVelX; __updatePID(&angVelPIDx);   
     angVelPIDy.target = +angPIDy.deltaOutput; angVelPIDy.measurement = angVelY; __updatePID(&angVelPIDy);   
     // angVelPIDz.target = -angPIDz.deltaOutput; angVelPIDz.measurement = angVelZ; __updatePID(&angVelPIDz);
-    angVelPIDz.target = 0; angVelPIDz.measurement = angVelZ; __updatePID(&angVelPIDz);
-    if(absValue(angPIDz.target - angPIDz.measurement) > 4){
-        __updatePID(&angPIDz);
-    }else{
-        angVelPIDz.deltaOutput = 0;
-    }
+                                              angVelPIDz.measurement = angVelZ; __updatePID(&angVelPIDz);
 
     /* 通过角速度环输出,决定PWM
         已知:
@@ -200,6 +195,10 @@ void updateMotors(
         实践测试:
             当车身角动量为(+,0,0)时,右轮角动量=(+,0,-),反作用角动量为(-,0,+),阻止了X方向的角动量变化.
     */
+
+    if(!isMotorRunning){
+        return;
+    }
     // setMotor(&motorLeft, ASSIGN, -angVelPIDx.deltaOutput);
     // setMotor(&motorRight, ASSIGN, +angVelPIDx.deltaOutput);
     setMotor(&motorLeft, ASSIGN, -angVelPIDx.deltaOutput + angVelPIDz.deltaOutput);

@@ -5,6 +5,8 @@
 #include "define.h"
 #include "pid.h"
 
+extern uint8 isMotorRunning;
+
 typedef enum { // 令pwm为逻辑占空比，取值范围为[-MAX, MAX]
     MOTOR_H_BRIDGE_NORMAL,  // speed = |pwm|
     MOTOR_H_BRIDGE_REVERSE  // speed = |MAX - pwm|
