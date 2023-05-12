@@ -73,7 +73,7 @@ FusionAhrs ahrs;
 uint8 switchMode = 255;
 uint8 screenMode = 4;
 uint8 uartSendMode = 255;
-
+uint8 isMotorRunning = true;
 // 姿态解算相关变量
 FusionEuler euler;
 int32 yawCount = 0;
@@ -125,14 +125,14 @@ int core0_main(void)
         // 此处编写需要循环执行的代码
 
         switchMode = 0;
-        switchMode |= gpio_get_level(SW_1_PIN) << 1;
-        switchMode |= gpio_get_level(SW_2_PIN) << 2;
-        switchMode |= gpio_get_level(SW_3_PIN) << 3;
-        switchMode |= gpio_get_level(SW_4_PIN) << 4;
+        switchMode |= gpio_get_level(SW_1_PIN) << 0;
+        switchMode |= gpio_get_level(SW_2_PIN) << 1;
+        switchMode |= gpio_get_level(SW_3_PIN) << 2;
+        switchMode |= gpio_get_level(SW_4_PIN) << 3;
         
         if(!(switchMode & 1)){ screenMode = 255; }
         if(!(switchMode & 2)){ uartSendMode = 255; }
-
+        if(!(switchMode & 4)){ isMotorRunning = false; }
 
         data_len = (uint8)wireless_uart_read_buff(data_buffer, 185);             // 查看是否有消息 默认缓冲区是 WIRELESS_UART_BUFFER_SIZE 总共 64 字节
         if(data_len > 0){
