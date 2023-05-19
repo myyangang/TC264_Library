@@ -368,7 +368,7 @@ void search_l_r(uint16_t break_flag, uint8_t (*image)[image_w],
 备    注：
 example： image_draw_rectan(bin_image);
  */
-void image_draw_rectan(uint8t (*image)[image_w]) {
+void image_draw_rectan(uint8 (*image)[image_w]) {
   uint8_t i = 0;
   for (i = 0; i < image_h; i++) {
     image[i][0] = 0;

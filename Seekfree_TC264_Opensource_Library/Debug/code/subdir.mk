@@ -4,21 +4,25 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../code/image.c \
 ../code/motor.c \
 ../code/pid.c \
 ../code/upperComputer.c 
 
 COMPILED_SRCS += \
+./code/image.src \
 ./code/motor.src \
 ./code/pid.src \
 ./code/upperComputer.src 
 
 C_DEPS += \
+./code/image.d \
 ./code/motor.d \
 ./code/pid.d \
 ./code/upperComputer.d 
 
 OBJS += \
+./code/image.o \
 ./code/motor.o \
 ./code/pid.o \
 ./code/upperComputer.o 
@@ -44,7 +48,7 @@ code/%.o: ./code/%.src code/subdir.mk
 clean: clean-code
 
 clean-code:
-	-$(RM) ./code/motor.d ./code/motor.o ./code/motor.src ./code/pid.d ./code/pid.o ./code/pid.src ./code/upperComputer.d ./code/upperComputer.o ./code/upperComputer.src
+	-$(RM) ./code/image.d ./code/image.o ./code/image.src ./code/motor.d ./code/motor.o ./code/motor.src ./code/pid.d ./code/pid.o ./code/pid.src ./code/upperComputer.d ./code/upperComputer.o ./code/upperComputer.src
 
 .PHONY: clean-code
 

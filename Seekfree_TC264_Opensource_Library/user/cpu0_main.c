@@ -72,7 +72,7 @@ FusionAhrs ahrs;
 
 uint8 switchMode = 255;
 uint8 screenMode = 4;
-uint8 uartSendMode = 255;
+uint8 uartSendMode = 3;
 uint8 isMotorRunning = true;
 // 姿态解算相关变量
 FusionEuler euler;

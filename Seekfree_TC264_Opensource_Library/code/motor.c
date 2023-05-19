@@ -34,11 +34,11 @@ void initMotors(){
 
     __initPID(&angPIDx, 2000, 0, 35, 0, 1000); //纯PD，到这一步也立不起来，因为预期直立角度yaw与实际直立角度有误差，导致轮子越转越快最终倒下
     __initPID(&angPIDy, 1100, 0, 25, 0, 1000); // P大时会震荡一次后倒下，P小时会震荡多次后倒下，应该适中
-    __initPID(&angPIDz, 1800, 0, 35, 0, 1000);
+    __initPID(&angPIDz, 1000, 0, 35, 0, 1000);
     
     __initPID(&angVelPIDx, 105, 4, 0, 0, 1000); //纯PI，理论上能在某个位置立住几秒，但是收积分影响，调试时需要按Reset复位积分值
     __initPID(&angVelPIDy, 10, 4, 0, 0, 1000);
-    __initPID(&angVelPIDz, 25, 0, 0, 0, 1000);
+    __initPID(&angVelPIDz, 6, 0, 0, 0, 1000);
 
 
     // 初始化方向引脚
@@ -139,6 +139,7 @@ void updateMotors(
     if(absValue(angPIDz.target - angPIDz.measurement) > 4){
         __updatePID(&angPIDz);
     }else{
+        angPIDz.errorInt = 0;
         angPIDz.deltaOutput = 0;
     }
     // angPIDx.target = 2.2; angPIDx.measurement = rollX; __updatePID(&angPIDx); // 手动修正误差
@@ -176,6 +177,9 @@ void updateMotors(
     if(absValue(angPIDz.target - angPIDz.measurement) > 4){
         __updatePID(&angPIDz);
     }else{
+        angPIDz.errorInt = 0;
+        angPIDz.deltaOutput = 0;
+        angVelPIDz.errorInt = 0;
         angVelPIDz.deltaOutput = 0;
     }
 
@@ -203,12 +207,10 @@ void updateMotors(
         实践测试:
             当车身角动量为(+,0,0)时,右轮角动量=(+,0,-),反作用角动量为(-,0,+),阻止了X方向的角动量变化.
     */
-    setMotor(&motorLeft, ASSIGN, -angVelPIDx.deltaOutput);
-    setMotor(&motorRight, ASSIGN, +angVelPIDx.deltaOutput);
-    // setMotor(&motorLeft, ASSIGN, -angVelPIDx.deltaOutput + angVelPIDz.deltaOutput);
-    // setMotor(&motorRight, ASSIGN, +angVelPIDx.deltaOutput + angVelPIDz.deltaOutput);
     // setMotor(&motorLeft, ASSIGN, -angVelPIDx.deltaOutput);
     // setMotor(&motorRight, ASSIGN, +angVelPIDx.deltaOutput);
+    setMotor(&motorLeft, ASSIGN, -angVelPIDx.deltaOutput + angVelPIDz.deltaOutput);
+    setMotor(&motorRight, ASSIGN, +angVelPIDx.deltaOutput + angVelPIDz.deltaOutput);
     setMotor(&motorBottom, ASSIGN, +angVelPIDy.deltaOutput);
 
 }

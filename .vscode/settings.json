@@ -9,6 +9,7 @@
         "utility": "c",
         "xmemory": "c",
         "xstring": "c",
-        "zf_common_headfile.h": "c"
+        "zf_common_headfile.h": "c",
+        "zf_device_tft180.h": "c"
     }
 }
