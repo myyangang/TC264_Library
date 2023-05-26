@@ -10,6 +10,10 @@
         "xmemory": "c",
         "xstring": "c",
         "zf_common_headfile.h": "c",
-        "zf_device_tft180.h": "c"
-    }
+        "zf_device_tft180.h": "c",
+        "zf_device_mt9v03x.h": "c",
+        "zf_common_font.h": "c",
+        "camera.h": "c"
+    },
+    "cmake.sourceDirectory": "C:/Users/Yaner/Desktop/TC264_Library/Seekfree_TC264_Opensource_Library/code/Fusion"
 }

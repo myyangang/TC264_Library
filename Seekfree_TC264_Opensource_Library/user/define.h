@@ -18,6 +18,8 @@
 #define swapValue(a,b) (a)^=(b);(b)^=(a);(a)^=(b);
 #define diffSumRatio(a,b,k) ((k * absValue((a)-(b))) / ((a)+(b)))
 #define isInRange(a,min,max) ((a)>=(min)&&(a)<=(max))
+#define limitRange(a,min,max) ((a)>(max)?(max):((a)<(min)?(min):(a)))
+
 
 #define CAMERA_WIDTH 160
 #define CAMERA_HEIGHT 128

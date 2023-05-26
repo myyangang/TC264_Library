@@ -1,46 +1,21 @@
-//-------------------------------------------------------------------------------------------------------------------
-//  简介:八邻域图像处理
-
-//------------------------------------------------------------------------------------------------------------------
-#include "image.h"
-
-/*
-函数名称：int my_abs(int value)
-功能说明：求绝对值
-参数说明：
-函数返回：绝对值
-修改时间：2022年9月8日
-备    注：
-example：  my_abs( x)；
- */
-int my_abs(int value)
-{
-if(value>=0) return value;
-else return -value;
+#include "camera.h"
+int my_abs(int value) {
+	if(value>=0) return value;
+	else return -value;
 }
 
-int16 limit_a_b(int16 x, int a, int b)
-{
-    if(x<a) x = a;
-    if(x>b) x = b;
-    return x;
-}
+// int16 limit_a_b(int16 x, int a, int b){
+//     if(x<a) x = a;
+//     if(x>b) x = b;
+//     return x;
+// }
 
-/*
-函数名称：int16 limit(int16 x, int16 y)
-功能说明：求x,y中的最小值
-参数说明：
-函数返回：返回两值中的最小值
-修改时间：2022年9月8日
-备    注：
-example：  limit( x,  y)
- */
-int16 limit1(int16 x, int16 y)
-{
-	if (x > y)             return y;
-	else if (x < -y)       return -y;
-	else                return x;
-}
+// /*功能说明：求x,y中的最小值*/
+// int16 limit1(int16 x, int16 y){
+// 	if (x > y)             return y;
+// 	else if (x < -y)       return -y;
+// 	else                return x;
+// }
 
 
 /*变量声明*/
@@ -69,9 +44,8 @@ void Get_image(uint8(*mt9v03x_image)[image_w])
 //  @brief     动态阈值
 //  @since      v1.0 
 //------------------------------------------------------------------------------------------------------------------
-uint8 otsuThreshold(uint8 *image, uint16 col, uint16 row)
-{
-#define GrayScale 256
+uint8 otsuThreshold(uint8 *image, uint16 col, uint16 row){
+	#define GrayScale 256
     uint16 Image_Width  = col;
     uint16 Image_Height = row;
     int X; uint16 Y;
@@ -147,8 +121,7 @@ uint8 otsuThreshold(uint8 *image, uint16 col, uint16 row)
 //  @brief      图像二值化，这里用的是大津法二值化。
 //  @since      v1.0 
 //------------------------------------------------------------------------------------------------------------------
-//uint8 bin_image[image_h][image_w];//图像数组
-uint8 (*bin_image)[3] = mt9v03x_image;
+uint8 bin_image[image_h][image_w];//图像数组
 void turn_to_bin(void)
 {
   uint8 i,j;
@@ -569,25 +542,19 @@ void image_draw_rectan(uint8(*image)[image_w])
 	}
 }
 
-/*
-函数名称：void image_process(void)
-功能说明：最终处理函数
-参数说明：无
-函数返回：无
-修改时间：2022年9月8日
-备    注：
-example： image_process();
- */
-void image_process(void)
-{
+/*最终处理函数*/
+void image_process(void){
 	uint16 i;
 	uint8 hightest = 0;//定义一个最高行，tip：这里的最高指的是y值的最小
+	
 	/*这是离线调试用的*/
 	Get_image(mt9v03x_image);
 	turn_to_bin();
+
 	/*提取赛道边界*/
 	image_filter(bin_image);//滤波
 	image_draw_rectan(bin_image);//预处理
+
 	//清零
 	data_stastics_l = 0;
 	data_stastics_r = 0;
@@ -605,26 +572,22 @@ void image_process(void)
 
 
 	//显示图像   改成你自己的就行 等后期足够自信了，显示关掉，显示屏挺占资源的
-	// ips154_displayimage032_zoom(bin_image[0], image_w, image_h, image_w, image_h,0,0);
-
+	tft180_displayimage03x(bin_image[0], image_w, image_h);
 	//根据最终循环次数画出边界点
-	for (i = 0; i < data_stastics_l; i++)
-	{
-		tft180_draw_point(points_l[i][0]+2, points_l[i][1], RGB565_PINK);//显示起点
+	for (i = 0; i < data_stastics_l; i++){
+		tft180_draw_point(points_l[i][0]+2, points_l[i][1], uesr_BLUE);
 	}
-	for (i = 0; i < data_stastics_r; i++)
-	{
-		tft180_draw_point(points_r[i][0]-2, points_r[i][1], RGB565_BROWN);//显示起点
+	for (i = 0; i < data_stastics_r; i++){
+		tft180_draw_point(points_r[i][0]-2, points_r[i][1], uesr_RED);
 	}
 
-	for (i = hightest; i < image_h-1; i++)
-	{
+	for (i = hightest; i < image_h-1; i++){
 		center_line[i] = (l_border[i] + r_border[i]) >> 1;//求中线
 		//求中线最好最后求，不管是补线还是做状态机，全程最好使用一组边线，中线最后求出，不能干扰最后的输出
 		//当然也有多组边线的找法，但是个人感觉很繁琐，不建议
-		tft180_draw_point(center_line[i], i, RGB565_BLUE);	//显示起点 显示中线	
-		tft180_draw_point(l_border[i], i, RGB565_GREEN);		//显示起点 显示左边线
-		tft180_draw_point(r_border[i], i, RGB565_YELLOW);		//显示起点 显示右边线
+		tft180_draw_point(center_line[i], i, uesr_GREEN);//显示起点 显示中线
+		tft180_draw_point(l_border[i], i, uesr_GREEN);//显示起点 显示左边线
+		tft180_draw_point(r_border[i], i, uesr_GREEN);//显示起点 显示右边线
 	}
 
 

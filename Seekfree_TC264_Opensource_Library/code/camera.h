@@ -2,7 +2,8 @@
 #define _IMAGE_H
 
 #include "zf_common_headfile.h"
-
+#include "zf_device_tft180.h"
+#include "define.h"
 // //数据类型声明（方便移植——移植的时候可以删掉，改成你自己的） 
 // typedef   signed          char int8;
 // typedef   signed short     int int16;
@@ -29,8 +30,13 @@
 #define bin_jump_num	1//跳过的点数
 #define border_max	image_w-2 //边界最大值
 #define border_min	1	//边界最小值	
+
+extern int my_abs(int value);
+// extern int16 limit_a_b(int16 x, int a, int b);
+// extern int16 limit1(int16 x, int16 y);
+
 extern uint8 original_image[image_h][image_w];
-extern uint8 (*bin_image)[3];//图像数组
+extern uint8 bin_image[image_h][image_w];//图像数组
 
 extern void image_process(void); //直接在中断或循环里调用此程序就可以循环执行了
 
