@@ -71,7 +71,8 @@ uint8 count = 0;
 FusionAhrs ahrs;
 
 uint8 switchMode = 255;
-uint8 screenMode = 5;
+// uint8 screenMode = 5;
+uint8 screenMode = 255;
 uint8 uartSendMode = 255;
 uint8 isMotorRunning = true;
 // 姿态解算相关变量
@@ -113,7 +114,7 @@ int core0_main(void)
 
     initMotors();
     
-    // pit_ms_init(CCU60_CH1, 10);
+    pit_ms_init(CCU60_CH1, 10);
     
     // gpio_set_level(WHEEL_3_DIR_PIN, 0);
     // pwm_set_duty(WHEEL_3_PWM_PIN, 1000);

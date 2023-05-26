@@ -209,6 +209,8 @@ void printCamera(tft180_dir_enum direction){
         tft180_show_gray_image(0, 0, mt9v03x_image[0], MT9V03X_W, MT9V03X_H, 160/2+1, 128/2+1, 0);
     }
     if(direction == TFT180_CROSSWISE){
-        tft180_show_gray_image(0, 0, mt9v03x_image[0], MT9V03X_W, MT9V03X_H, 141, 90, 0);
+        // tft180_show_gray_image(0, 0, mt9v03x_image[0], MT9V03X_W, MT9V03X_H, 141, 90, 0);
+        tft180_show_gray_image(80, 64, mt9v03x_image[0], MT9V03X_W, MT9V03X_H, 80, 64, 0);
+
     }
 }

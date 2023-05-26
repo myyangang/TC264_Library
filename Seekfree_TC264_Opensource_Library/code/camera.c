@@ -12,14 +12,11 @@ uint8 image_thereshold;//图像分割阈值
 //  @brief      获得一副灰度图像
 //  @since      v1.0 
 //------------------------------------------------------------------------------------------------------------------
-void Get_image(uint8(*mt9v03x_image)[image_w])
-{
-#define use_num		1	//1就是不压缩，2就是压缩一倍	
+void Get_image(uint8(*mt9v03x_image)[image_w]){
+	#define use_num		1	//1就是不压缩，2就是压缩一倍	
 	uint8 i = 0, j = 0, row = 0, line = 0;
-    for (i = 0; i < image_h; i += use_num)          //
-    {
-        for (j = 0; j <image_w; j += use_num)     //
-        {
+    for (i = 0; i < image_h; i += use_num){
+        for (j = 0; j <image_w; j += use_num){
             original_image[row][line] = mt9v03x_image[i][j];//这里的参数填写你的摄像头采集到的图像
 			line++;
         }
@@ -559,22 +556,23 @@ void image_process(void){
 
 
 	//显示图像   改成你自己的就行 等后期足够自信了，显示关掉，显示屏挺占资源的
-	tft180_displayimage03x(bin_image[0], image_w, image_h);
+	tft180_show_gray_image(0, 0, bin_image[0], MT9V03X_W, MT9V03X_H, 141, 90 ,128);
+	// tft180_displayimage03x(bin_image[0], image_w, image_h);
 	//根据最终循环次数画出边界点
 	for (i = 0; i < data_stastics_l; i++){
-		tft180_draw_point(points_l[i][0]+2, points_l[i][1], uesr_BLUE);
+		// tft180_draw_point(points_l[i][0]+2, points_l[i][1], uesr_BLUE);
 	}
 	for (i = 0; i < data_stastics_r; i++){
-		tft180_draw_point(points_r[i][0]-2, points_r[i][1], uesr_RED);
+		// tft180_draw_point(points_r[i][0]-2, points_r[i][1], uesr_RED);
 	}
 
 	for (i = hightest; i < image_h-1; i++){
 		center_line[i] = (l_border[i] + r_border[i]) >> 1;//求中线
 		//求中线最好最后求，不管是补线还是做状态机，全程最好使用一组边线，中线最后求出，不能干扰最后的输出
 		//当然也有多组边线的找法，但是个人感觉很繁琐，不建议
-		tft180_draw_point(center_line[i], i, uesr_GREEN);//显示起点 显示中线
-		tft180_draw_point(l_border[i], i, uesr_GREEN);//显示起点 显示左边线
-		tft180_draw_point(r_border[i], i, uesr_GREEN);//显示起点 显示右边线
+		// tft180_draw_point(center_line[i], i, uesr_GREEN);//显示起点 显示中线
+		// tft180_draw_point(l_border[i], i, uesr_GREEN);//显示起点 显示左边线
+		// tft180_draw_point(r_border[i], i, uesr_GREEN);//显示起点 显示右边线
 	}
 
 

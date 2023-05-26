@@ -55,16 +55,16 @@ void core1_main(void)
     // 此处编写用户代码 例如外设初始化代码等
 
 
-
+    pit_ms_init(CCU61_CH0, 100);
 
     // 此处编写用户代码 例如外设初始化代码等
     cpu_wait_event_ready();                 // 等待所有核心初始化完毕
-    while (TRUE)
-    {
+    while (TRUE){
         // 此处编写需要循环执行的代码
 
-
-
+        tft180_show_gray_image(0, 0, mt9v03x_image[0], MT9V03X_W, MT9V03X_H, 160/2 - 1, 128/2 - 1, 0);
+        // tft180_show_gray_image(0, 0, mt9v03x_image[0], MT9V03X_H, MT9V03X_W, 141, 90, 0);
+        // tft180_show_gray_image(0, 0, mt9v03x_image[0], MT9V03X_W, MT9V03X_H, 141, 90 ,0);
 
         // 此处编写需要循环执行的代码
     }

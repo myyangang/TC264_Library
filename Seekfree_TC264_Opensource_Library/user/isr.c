@@ -39,6 +39,7 @@
 #include "motor.h"
 #include "print.h"
 #include "upperComputer.h"
+#include "camera.h"
 extern FusionAhrs ahrs;
 extern FusionEuler euler;
 extern int32 yawCount;
@@ -123,8 +124,7 @@ IFX_INTERRUPT(cc61_pit_ch0_isr, 0, CCU6_1_CH0_ISR_PRIORITY)
     interrupt_global_enable(0);                     // 开启中断嵌套
     pit_clear_flag(CCU61_CH0);
 
-
-
+    // image_process();
 
 }
 
