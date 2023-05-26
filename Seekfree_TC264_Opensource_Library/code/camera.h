@@ -32,8 +32,6 @@
 #define border_min	1	//边界最小值	
 
 extern int my_abs(int value);
-// extern int16 limit_a_b(int16 x, int a, int b);
-// extern int16 limit1(int16 x, int16 y);
 
 extern uint8 original_image[image_h][image_w];
 extern uint8 bin_image[image_h][image_w];//图像数组

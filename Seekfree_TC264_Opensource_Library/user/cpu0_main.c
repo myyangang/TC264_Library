@@ -71,8 +71,8 @@ uint8 count = 0;
 FusionAhrs ahrs;
 
 uint8 switchMode = 255;
-uint8 screenMode = 4;
-uint8 uartSendMode = 3;
+uint8 screenMode = 5;
+uint8 uartSendMode = 255;
 uint8 isMotorRunning = true;
 // 姿态解算相关变量
 FusionEuler euler;
@@ -113,7 +113,7 @@ int core0_main(void)
 
     initMotors();
     
-    pit_ms_init(CCU60_CH1, 10);
+    // pit_ms_init(CCU60_CH1, 10);
     
     // gpio_set_level(WHEEL_3_DIR_PIN, 0);
     // pwm_set_duty(WHEEL_3_PWM_PIN, 1000);
@@ -146,22 +146,22 @@ int core0_main(void)
 
         switch (screenMode){ 
             case 0:
-                printAllAttitudeSolution(angPIDz.measurement, angPIDy.measurement, angPIDx.measurement);        
+                printAllAttitudeSolution(angPIDz.measurement, angPIDy.measurement, angPIDx.measurement, TFT180_CROSSWISE);        
                 break;
             case 1:
-                printMotorSpeed(velPIDl.measurement, velPIDr.measurement, velPIDy.measurement);
+                printMotorSpeed(velPIDl.measurement, velPIDr.measurement, velPIDy.measurement, TFT180_CROSSWISE);
                 break;
             case 2:
-                printAngVelPID(&angVelPIDx, &angVelPIDy, &angVelPIDz);
+                printAngVelPID(&angVelPIDx, &angVelPIDy, &angVelPIDz, TFT180_CROSSWISE);
                 break;
             case 3: // 显示所有PID参数
-                printAllPIDCoef();
+                printAllPIDCoef(TFT180_CROSSWISE);
                 break;
             case 4:
-                printAllPIDOutput();
+                printAllPIDOutput(TFT180_CROSSWISE);
                 break;
             case 5:
-                printCamera();
+                printCamera(TFT180_CROSSWISE);
                 break;
             default:
                 system_delay_ms(5); // 千万别删!无线串口read_buffer()相邻两次调用需要一定的延时,否则会收发失去同步/藏包.

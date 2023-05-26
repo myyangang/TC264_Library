@@ -4,19 +4,6 @@ int my_abs(int value) {
 	else return -value;
 }
 
-// int16 limit_a_b(int16 x, int a, int b){
-//     if(x<a) x = a;
-//     if(x>b) x = b;
-//     return x;
-// }
-
-// /*功能说明：求x,y中的最小值*/
-// int16 limit1(int16 x, int16 y){
-// 	if (x > y)             return y;
-// 	else if (x < -y)       return -y;
-// 	else                return x;
-// }
-
 
 /*变量声明*/
 uint8 original_image[image_h][image_w];
