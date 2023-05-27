@@ -21,8 +21,8 @@
 
 
 //宏定义
-#define image_h	120//图像高度
-#define image_w	188//图像宽度
+#define image_h	MT9V03X_H//图像高度
+#define image_w	MT9V03X_W//图像宽度
 
 #define white_pixel	255
 #define black_pixel	0

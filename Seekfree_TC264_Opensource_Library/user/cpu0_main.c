@@ -114,7 +114,7 @@ int core0_main(void)
 
     initMotors();
     
-    pit_ms_init(CCU60_CH1, 10);
+    // pit_ms_init(CCU60_CH1, 10);
     
     // gpio_set_level(WHEEL_3_DIR_PIN, 0);
     // pwm_set_duty(WHEEL_3_PWM_PIN, 1000);
@@ -165,7 +165,7 @@ int core0_main(void)
                 printCamera(TFT180_CROSSWISE);
                 break;
             default:
-                system_delay_ms(5); // 千万别删!无线串口read_buffer()相邻两次调用需要一定的延时,否则会收发失去同步/藏包.
+                ;// system_delay_ms(5); // 千万别删!无线串口read_buffer()相邻两次调用需要一定的延时,否则会收发失去同步/藏包.
         }
         
         switch (uartSendMode){

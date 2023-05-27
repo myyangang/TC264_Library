@@ -556,8 +556,8 @@ void image_process(void){
 
 
 	//显示图像   改成你自己的就行 等后期足够自信了，显示关掉，显示屏挺占资源的
-	tft180_show_gray_image(0, 0, bin_image[0], MT9V03X_W, MT9V03X_H, 141, 90 ,128);
-	// tft180_displayimage03x(bin_image[0], image_w, image_h);
+	tft180_displayimage03x(bin_image[0], 141, 90);
+	// tft180_show_gray_image(0, 0, (p), MT9V03X_W, MT9V03X_H, (width), (height), 0)
 	//根据最终循环次数画出边界点
 	for (i = 0; i < data_stastics_l; i++){
 		// tft180_draw_point(points_l[i][0]+2, points_l[i][1], uesr_BLUE);

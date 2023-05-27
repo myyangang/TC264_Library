@@ -34,6 +34,7 @@
 ********************************************************************************************************************/
 
 #include "zf_common_headfile.h"
+#include "camera.h"
 #pragma section all "cpu1_dsram"
 // 将本语句与#pragma section all restore语句之间的全局变量都放在CPU1的RAM中
 
@@ -62,7 +63,10 @@ void core1_main(void)
     while (TRUE){
         // 此处编写需要循环执行的代码
 
-        tft180_show_gray_image(0, 0, mt9v03x_image[0], MT9V03X_W, MT9V03X_H, 160/2 - 1, 128/2 - 1, 0);
+        // tft180_show_gray_image(0, 0, mt9v03x_image[0], MT9V03X_W, MT9V03X_H, 160/2 - 1, 128/2 - 1, 0);
+
+        image_process();
+
         // tft180_show_gray_image(0, 0, mt9v03x_image[0], MT9V03X_H, MT9V03X_W, 141, 90, 0);
         // tft180_show_gray_image(0, 0, mt9v03x_image[0], MT9V03X_W, MT9V03X_H, 141, 90 ,0);
 
