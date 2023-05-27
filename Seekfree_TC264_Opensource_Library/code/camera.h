@@ -12,6 +12,11 @@
 // typedef unsigned short     int uint16;
 // typedef unsigned           int uint32;
 
+typedef struct Point{
+    uint16 x;
+    uint16 y;
+}Point;
+
 //颜色定义  因为有先例，连颜色都改不来，我直接放这了
 #define uesr_RED     0XF800    //红色
 #define uesr_GREEN   0X07E0    //绿色
