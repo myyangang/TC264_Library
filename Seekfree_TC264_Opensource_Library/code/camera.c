@@ -362,29 +362,21 @@ example： get_left(data_stastics_l );
 uint8 l_border[image_h];//左线数组
 uint8 r_border[image_h];//右线数组
 uint8 center_line[image_h];//中线数组
-void get_left(uint16 total_L)
-{
-	uint8 i = 0;
-	uint16 j = 0;
-	uint8 h = 0;
+void get_left(uint16 total_L){
 	//初始化
-	for (i = 0;i<image_h;i++)
-	{
+	for(uint16 i = 0 ; i < image_h ; ++i){
 		l_border[i] = border_min;
 	}
-	h = image_h - 2;
+	uint16 h = image_h - 2;
 	//左边
-	for (j = 0; j < total_L; j++)
-	{
-		//printf("%d\n", j);
-		if (points_l[j].y == h)
-		{
-			l_border[h] = points_l[j].x+1;
+	for(uint16 j = 0 ; j < total_L ; ++j){
+		if(points_l[j].y == h){
+			l_border[h] = points_l[j].x + 1;
+		}else{
+			continue; //每行只取一个点，没到下一行就不记录
 		}
-		else continue; //每行只取一个点，没到下一行就不记录
-		h--;
-		if (h == 0) 
-		{
+		--h;
+		if(h == 0){
 			break;//到最后一行退出
 		}
 	}
@@ -399,26 +391,23 @@ total_R  ：找到的点的总数
 备    注：
 example：get_right(data_stastics_r);
  */
-void get_right(uint16 total_R)
-{
-	uint8 i = 0;
-	uint16 j = 0;
-	uint8 h = 0;
-	for (i = 0; i < image_h; i++)
-	{
+void get_right(uint16 total_R){
+	for (uint16 i = 0; i < image_h ; ++i){
 		r_border[i] = border_max;//右边线初始化放到最右边，左边线放到最左边，这样八邻域闭合区域外的中线就会在中间，不会干扰得到的数据
 	}
-	h = image_h - 2;
+	uint16 h = image_h - 2;
 	//右边
-	for (j = 0; j < total_R; j++)
-	{
-		if (points_r[j].y == h)
-		{
+	for (uint16 j = 0 ; j < total_R ; ++j){
+		if (points_r[j].y == h){
 			r_border[h] = points_r[j].x - 1;
+		}else{
+			continue;//每行只取一个点，没到下一行就不记录
 		}
-		else continue;//每行只取一个点，没到下一行就不记录
-		h--;
-		if (h == 0)break;//到最后一行退出
+
+		--h;
+		if (h == 0){
+			break;//到最后一行退出
+		}
 	}
 }
 
@@ -453,15 +442,14 @@ void image_filter(uint8(*bin_image)[image_w]){
 备    注：
 example： image_draw_rectan(bin_image);
  */
-void image_draw_rectan(uint8(*image)[image_w])
-{
-	for(uint16 i = 0; i < image_h; ++i){
+void image_draw_rectan(uint8(*image)[image_w]){
+	for(uint16 i = 0 ; i < image_h ; ++i){
 		image[i][0] = 0;
 		image[i][1] = 0;
 		image[i][image_w - 1] = 0;
 		image[i][image_w - 2] = 0;
 	}
-	for(uint16 i = 0; i < image_w; ++i){
+	for(uint16 i = 0 ; i < image_w ; ++i){
 		image[0][i] = 0;
 		image[1][i] = 0;
 		//image[image_h-1][i] = 0;
@@ -483,8 +471,8 @@ void image_process(void){
 	//清零
 	data_stastics_l = 0;
 	data_stastics_r = 0;
-	if (get_start_point(image_h - 2))//找到起点了，再执行八领域，没找到就一直找
-	{
+	if (get_start_point(image_h - 2)){
+		//找到起点了，再执行八领域，没找到就一直找
 		printf("正在开始八领域\n");
 		search_l_r((uint16)USE_num, bin_image, &data_stastics_l, &data_stastics_r, startPoint_L.x, startPoint_L.y, startPoint_R.x, startPoint_R.y, &hightest);
 		printf("八邻域已结束\n");
