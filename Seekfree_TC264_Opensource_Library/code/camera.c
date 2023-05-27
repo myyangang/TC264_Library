@@ -556,23 +556,23 @@ void image_process(void){
 
 
 	//显示图像   改成你自己的就行 等后期足够自信了，显示关掉，显示屏挺占资源的
-	tft180_displayimage03x(bin_image[0], 141, 90);
+	tft180_displayimage03x(bin_image[0], MT9V03X_W, MT9V03X_H);
 	// tft180_show_gray_image(0, 0, (p), MT9V03X_W, MT9V03X_H, (width), (height), 0)
 	//根据最终循环次数画出边界点
 	for (i = 0; i < data_stastics_l; i++){
-		// tft180_draw_point(points_l[i][0]+2, points_l[i][1], uesr_BLUE);
+		tft180_draw_point(points_l[i][0]+2, points_l[i][1], uesr_BLUE);
 	}
 	for (i = 0; i < data_stastics_r; i++){
-		// tft180_draw_point(points_r[i][0]-2, points_r[i][1], uesr_RED);
+		tft180_draw_point(points_r[i][0]-2, points_r[i][1], uesr_RED);
 	}
 
 	for (i = hightest; i < image_h-1; i++){
 		center_line[i] = (l_border[i] + r_border[i]) >> 1;//求中线
 		//求中线最好最后求，不管是补线还是做状态机，全程最好使用一组边线，中线最后求出，不能干扰最后的输出
 		//当然也有多组边线的找法，但是个人感觉很繁琐，不建议
-		// tft180_draw_point(center_line[i], i, uesr_GREEN);//显示起点 显示中线
-		// tft180_draw_point(l_border[i], i, uesr_GREEN);//显示起点 显示左边线
-		// tft180_draw_point(r_border[i], i, uesr_GREEN);//显示起点 显示右边线
+		tft180_draw_point(center_line[i], i, uesr_GREEN);//显示起点 显示中线
+		tft180_draw_point(l_border[i], i, uesr_GREEN);//显示起点 显示左边线
+		tft180_draw_point(r_border[i], i, uesr_GREEN);//显示起点 显示右边线
 	}
 
 
