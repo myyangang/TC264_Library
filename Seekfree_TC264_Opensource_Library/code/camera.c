@@ -198,7 +198,7 @@ void search_l_r(
 	uint16 break_flag, uint8(*image)[image_w], uint16 *l_stastic, uint16 *r_stastic, 
 	uint8 l_start_x, uint8 l_start_y, uint8 r_start_x, uint8 r_start_y, uint8*hightest
 ){
-
+	gpio_set_level(BELL_PIN, 1);
 	//左边变量
 	Point searchFileds_L[8] = {{0}};
 	uint8 index_l = 0;
@@ -342,10 +342,11 @@ void search_l_r(
 
 	}
 
-
 	//取出循环次数
 	*l_stastic = l_data_statics;
 	*r_stastic = r_data_statics;
+
+	gpio_set_level(BELL_PIN, 0);
 
 }
 /*
