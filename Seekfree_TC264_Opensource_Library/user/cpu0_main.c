@@ -73,8 +73,8 @@ FusionAhrs ahrs;
 uint8 switchMode = 255;
 // uint8 screenMode = 5;
 uint8 screenMode = 255;
-uint8 uartSendMode = 255;
-uint8 isMotorRunning = true;
+uint8 uartSendMode = 6;
+uint8 isMotorRunning = false;
 // 姿态解算相关变量
 FusionEuler euler;
 int32 yawCount = 0;
@@ -210,6 +210,9 @@ int core0_main(void)
                         motorLeft.pwm, motorRight.pwm, 0, 0,
                         velPIDl.measurement, velPIDr.measurement, 0, 0
                 );
+                break;
+            case 6:
+                wireless_uart_send_buff(mt9v03x_image, MT9V03X_IMAGE_SIZE);
                 break;
         }
 
