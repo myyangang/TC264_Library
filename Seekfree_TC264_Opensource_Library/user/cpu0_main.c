@@ -71,7 +71,7 @@ uint8 count = 0;
 FusionAhrs ahrs;
 
 uint8 switchMode = 255;
-uint8 screenMode = 4;
+uint8 screenMode = 6;
 uint8 uartSendMode = 255;
 uint8 isMotorRunning = true;
 // 姿态解算相关变量
@@ -162,6 +162,9 @@ int core0_main(void)
                 break;
             case 5:
                 printCamera();
+                break;
+            case 6:
+                printAngVelPIDx();
                 break;
             default:
                 system_delay_ms(5); // 千万别删!无线串口read_buffer()相邻两次调用需要一定的延时,否则会收发失去同步/藏包.

@@ -134,3 +134,21 @@ void printAllPIDOutput(){
 void printCamera(){
     tft180_show_gray_image(0, 0, mt9v03x_image[0], MT9V03X_W, MT9V03X_H, 160/10, 128/10, 0);
 }
+
+void printAngVelPIDx(){
+    tft180_show_string(0, 0, "Why aZ effect wX");
+    
+    tft180_show_string(20 , 16 , "PWM"); tft180_show_string(52 , 16 , "avX"); tft180_show_string(88 , 16 , "avZ");
+    tft180_show_string(0 , 32 , "ML"); tft180_show_int(20, 32, motorLeft.pwm, 4);  tft180_show_int(52, 32, -angVelPIDx.deltaOutput, 4); tft180_show_int(88, 32, angVelPIDz.deltaOutput, 4);
+    tft180_show_string(0 , 48 , "MR"); tft180_show_int(20, 48, motorRight.pwm, 4); tft180_show_int(52, 48, +angVelPIDx.deltaOutput, 4); tft180_show_int(88, 48, angVelPIDz.deltaOutput, 4);
+
+    tft180_show_string(0, 64, "aZtar"); tft180_show_float(0,  80, angPIDz.target, 2, 2);
+    tft180_show_string(42,64, "vLout"); tft180_show_int(42, 80, velPIDl.deltaOutput, 4); 
+    tft180_show_string(84,64, "vRout"); tft180_show_int(84, 80, velPIDr.deltaOutput, 4);
+
+    tft180_show_string(0 ,96, "aXtar"); tft180_show_float(0,112,(-velPIDl.deltaOutput + velPIDr.deltaOutput)/100, 2,1);
+    tft180_show_string(42 ,96, "aXtar"); tft180_show_float(42,112,(-velPIDl.deltaOutput + velPIDr.deltaOutput)/100, 2,1);
+    tft180_show_string(84 ,96, "aXtar"); tft180_show_float(84,112,(-velPIDl.deltaOutput + velPIDr.deltaOutput)/100, 2,1);
+
+
+}
