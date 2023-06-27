@@ -71,8 +71,8 @@ uint8 count = 0;
 FusionAhrs ahrs;
 
 uint8 switchMode = 255;
-uint8 screenMode = 6;
-uint8 uartSendMode = 255;
+uint8 screenMode = 0;
+uint8 uartSendMode = 65;
 uint8 isMotorRunning = true;
 // 姿态解算相关变量
 FusionEuler euler;
@@ -80,6 +80,7 @@ int32 yawCount = 0;
 float yawPrevious = 0;
 float yawTargetOffset = 0;
 
+uint8 image_temp[MT9V03X_H][MT9V03X_W] = {0};
 int core0_main(void)
 {
     clock_init();                   // 获取时钟频率<务必保留>
@@ -146,25 +147,22 @@ int core0_main(void)
 
         switch (screenMode){ 
             case 0:
-                printAllAttitudeSolution(angPIDz.measurement, angPIDy.measurement, angPIDx.measurement);        
+                printAllAttitudeSolution(angPIDz.measurement, angPIDy.measurement, angPIDx.measurement,TFT180_CROSSWISE);        
                 break;
             case 1:
-                printMotorSpeed(velPIDl.measurement, velPIDr.measurement, velPIDy.measurement);
+                printMotorSpeed(velPIDl.measurement, velPIDr.measurement, velPIDy.measurement,TFT180_CROSSWISE);
                 break;
             case 2:
-                printAngVelPID(&angVelPIDx, &angVelPIDy, &angVelPIDz);
+                printAngVelPID(&angVelPIDx, &angVelPIDy, &angVelPIDz,TFT180_CROSSWISE);
                 break;
             case 3: // 显示所有PID参数
-                printAllPIDCoef();
+                printAllPIDCoef(TFT180_CROSSWISE);
                 break;
             case 4:
-                printAllPIDOutput();
+                printAllPIDOutput(TFT180_CROSSWISE);
                 break;
             case 5:
-                printCamera();
-                break;
-            case 6:
-                printAngVelPIDx();
+                printCamera(TFT180_CROSSWISE);
                 break;
             default:
                 system_delay_ms(5); // 千万别删!无线串口read_buffer()相邻两次调用需要一定的延时,否则会收发失去同步/藏包.
@@ -214,11 +212,11 @@ int core0_main(void)
                 );
                 break;
             case 6:
-                wireless_uart_LingLi_send(
-                        angPIDz.pCorr, angPIDz.iCorr, angPIDz.dCorr, angPIDz.deltaOutput,
-                        motorLeft.pwm, motorRight.pwm, 0, 0,
-                        angPIDz.target, angPIDz.measurement, angPIDz.deltaOutput, 0
-                );
+                memcpy(image_temp, mt9v03x_image, MT9V03X_IMAGE_SIZE);
+                wireless_uart_send_string("image_begin");
+                wireless_uart_send_buff(image_temp, MT9V03X_IMAGE_SIZE);
+                // wireless_uart_send_buff(mt9v03x_image, MT9V03X_IMAGE_SIZE);
+                wireless_uart_send_string("image_end");
         }
 
         // if(gpio_get_level(BTN_1_PIN) == 0){
