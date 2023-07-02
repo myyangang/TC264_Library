@@ -37,6 +37,9 @@
 #include "motor.h"
 #include "print.h"
 #include "upperComputer.h"
+
+#include "camera_v2.h"
+
 #pragma section all "cpu0_dsram"
 // 将本语句与#pragma section all restore语句之间的全局变量都放在CPU0的RAM中
 
@@ -71,9 +74,9 @@ uint8 count = 0;
 FusionAhrs ahrs;
 
 uint8 switchMode = 255;
-uint8 screenMode = 0;
+uint8 screenMode = 6;
 uint8 uartSendMode = 65;
-uint8 isMotorRunning = true;
+uint8 isMotorRunning = false;
 // 姿态解算相关变量
 FusionEuler euler;
 int32 yawCount = 0;
@@ -163,6 +166,10 @@ int core0_main(void)
                 break;
             case 5:
                 printCamera(TFT180_CROSSWISE);
+                break;
+            case 6:
+                process_image();
+                tft180_show_gray_image(0, 0, edge[0], MT9V03X_W, MT9V03X_H, 160, 128, 0);
                 break;
             default:
                 system_delay_ms(5); // 千万别删!无线串口read_buffer()相邻两次调用需要一定的延时,否则会收发失去同步/藏包.

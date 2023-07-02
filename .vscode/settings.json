@@ -14,5 +14,6 @@
         "zf_device_mt9v03x.h": "c",
         "zf_common_font.h": "c",
         "camera.h": "c",
+        "camera_v2.h": "c"
     }
 }

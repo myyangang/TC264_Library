@@ -133,10 +133,10 @@ void updateMotors(
     */
 
     // 在不考虑上一层PID环的情况下,我们期望车身直立平衡,angPIDx与angPIDy的target均为0,angPIDz的target随意.
-    angPIDx.target = +3.7f + (float)(-velPIDl.deltaOutput + velPIDr.deltaOutput) / 100; angPIDx.measurement = rollX; __updatePID(&angPIDx); // 手动修正误差
+    angPIDx.target = +3.7f + (float)(-velPIDl.deltaOutput + velPIDr.deltaOutput) / 100 + (float)(angPIDz.error[0]) / 20; angPIDx.measurement = rollX; __updatePID(&angPIDx); // 手动修正误差
     angPIDy.target = -2.2f + (float)(-velPIDy.deltaOutput                      ) / 100; angPIDy.measurement = pitchY; __updatePID(&angPIDy);
-    angPIDz.target = yawTargetOffset + (float)(velPIDl.deltaOutput + velPIDr.deltaOutput) / 70;  angPIDz.measurement = yawZ; __updatePID(&angPIDz);
-    // angPIDz.target = yawTargetOffset;  angPIDz.measurement = yawZ; __updatePID(&angPIDz);
+    // angPIDz.target = yawTargetOffset + (float)(velPIDl.deltaOutput + velPIDr.deltaOutput) / 70;  angPIDz.measurement = yawZ; __updatePID(&angPIDz);
+    angPIDz.target = yawTargetOffset;  angPIDz.measurement = yawZ; __updatePID(&angPIDz);
 
     // angPIDx.target = 2.2; angPIDx.measurement = rollX; __updatePID(&angPIDx); // 手动修正误差
     // angPIDy.target = 0; angPIDy.measurement = pitchY; __updatePID(&angPIDy);
