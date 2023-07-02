@@ -74,7 +74,6 @@ uint8 count = 0;
 FusionAhrs ahrs;
 
 uint8 switchMode = 255;
-uint8 screenMode = 6;
 uint8 uartSendMode = 65;
 uint8 isMotorRunning = false;
 // 姿态解算相关变量
@@ -108,8 +107,6 @@ int core0_main(void)
 
     // 摄像头初始化
     mt9v03x_init();
-
-    tft180_init();
 
     // 陀螺仪初始化
     imu660ra_init();
@@ -148,32 +145,7 @@ int core0_main(void)
         }
         memset(data_buffer, 0, 32);
 
-        switch (screenMode){ 
-            case 0:
-                printAllAttitudeSolution(angPIDz.measurement, angPIDy.measurement, angPIDx.measurement,TFT180_CROSSWISE);        
-                break;
-            case 1:
-                printMotorSpeed(velPIDl.measurement, velPIDr.measurement, velPIDy.measurement,TFT180_CROSSWISE);
-                break;
-            case 2:
-                printAngVelPID(&angVelPIDx, &angVelPIDy, &angVelPIDz,TFT180_CROSSWISE);
-                break;
-            case 3: // 显示所有PID参数
-                printAllPIDCoef(TFT180_CROSSWISE);
-                break;
-            case 4:
-                printAllPIDOutput(TFT180_CROSSWISE);
-                break;
-            case 5:
-                printCamera(TFT180_CROSSWISE);
-                break;
-            case 6:
-                process_image();
-                tft180_show_gray_image(0, 0, edge[0], MT9V03X_W, MT9V03X_H, 160, 128, 0);
-                break;
-            default:
-                system_delay_ms(5); // 千万别删!无线串口read_buffer()相邻两次调用需要一定的延时,否则会收发失去同步/藏包.
-        }
+
         
         switch (uartSendMode){
             case 0:

@@ -35,9 +35,12 @@
 
 #include "zf_common_headfile.h"
 #include "camera_v2.h"
+#include "print.h"
+#include "motor.h"
 #pragma section all "cpu1_dsram"
 // 将本语句与#pragma section all restore语句之间的全局变量都放在CPU1的RAM中
 
+uint8 screenMode = 6;
 
 // 工程导入到软件之后，应该选中工程然后点击refresh刷新一下之后再编译
 // 工程默认设置为关闭优化，可以自己右击工程选择properties->C/C++ Build->Setting
@@ -55,8 +58,7 @@ void core1_main(void)
     interrupt_global_enable(0);             // 打开全局中断
     // 此处编写用户代码 例如外设初始化代码等
 
-
-
+    tft180_init();
 
     // 此处编写用户代码 例如外设初始化代码等
     cpu_wait_event_ready();                 // 等待所有核心初始化完毕
@@ -64,9 +66,32 @@ void core1_main(void)
     {
         // 此处编写需要循环执行的代码
         
-        // process_image();
-        // tft180_show_gray_image(0, 0, camera_image[0], MT9V03X_W, MT9V03X_H, 160, 128, 0);
-
+        switch (screenMode){ 
+            case 0:
+                printAllAttitudeSolution(angPIDz.measurement, angPIDy.measurement, angPIDx.measurement,TFT180_CROSSWISE);        
+                break;
+            case 1:
+                printMotorSpeed(velPIDl.measurement, velPIDr.measurement, velPIDy.measurement,TFT180_CROSSWISE);
+                break;
+            case 2:
+                printAngVelPID(&angVelPIDx, &angVelPIDy, &angVelPIDz,TFT180_CROSSWISE);
+                break;
+            case 3: // 显示所有PID参数
+                printAllPIDCoef(TFT180_CROSSWISE);
+                break;
+            case 4:
+                printAllPIDOutput(TFT180_CROSSWISE);
+                break;
+            case 5:
+                printCamera(TFT180_CROSSWISE);
+                break;
+            case 6:
+                process_image();
+                tft180_show_gray_image(0, 0, edge[0], MT9V03X_W, MT9V03X_H, 160, 128, 0);
+                break;
+            default:
+                system_delay_ms(5); // 千万别删!无线串口read_buffer()相邻两次调用需要一定的延时,否则会收发失去同步/藏包.
+        }
 
 
         // 此处编写需要循环执行的代码
