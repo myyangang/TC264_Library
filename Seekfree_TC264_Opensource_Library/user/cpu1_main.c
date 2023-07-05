@@ -60,6 +60,8 @@ void core1_main(void)
 
     tft180_init();
 
+    int fpsTimes = 0;
+
     // 此处编写用户代码 例如外设初始化代码等
     cpu_wait_event_ready();                 // 等待所有核心初始化完毕
     while (TRUE)
@@ -87,7 +89,9 @@ void core1_main(void)
                 break;
             case 6:
                 process_image();
-                tft180_show_gray_image(0, 0, edge[0], MT9V03X_W, MT9V03X_H, 160, 128, 0);
+                fpsTimes++;
+                tft180_show_int(0,0, fpsTimes, 5);
+                // tft180_show_gray_image(0, 0, edge[0], MT9V03X_W, MT9V03X_H, 160, 128, 0);
                 break;
             default:
                 system_delay_ms(5); // 千万别删!无线串口read_buffer()相邻两次调用需要一定的延时,否则会收发失去同步/藏包.
